@@ -7,6 +7,12 @@ namespace PjoterParker.Core.Commands
 {
     public class EventComposite
     {
+        public EventComposite(IEvent @event)
+        {
+            Event = @event;
+            Metadata = new EventMetadata();
+        }
+
         public EventComposite(IEvent @event, EventMetadata metadata)
         {
             Event = @event;

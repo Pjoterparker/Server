@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using PjoterParker.Core.Commands;
-using PjoterParker.Core.Events;
 
 namespace PjoterParker.Core.Aggregates
 {
@@ -10,11 +8,8 @@ namespace PjoterParker.Core.Aggregates
     {
         IEnumerable<EventComposite> Events { get; }
 
-        long Version { get; }
-    }
+        long Version { get; set; }
 
-    public interface IAggregateRoot<out TIdentity> : IAggregateRoot
-    {
-        TIdentity Id { get; }
+        Guid Id { get; set; }
     }
 }

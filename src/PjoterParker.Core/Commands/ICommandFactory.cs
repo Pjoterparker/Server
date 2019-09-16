@@ -4,7 +4,7 @@ using System.Text;
 
 namespace PjoterParker.Core.Commands
 {
-    interface ICommandFactory
+    public interface ICommandFactory
     {
         CommandComposite Make(ICommand command);
     }
