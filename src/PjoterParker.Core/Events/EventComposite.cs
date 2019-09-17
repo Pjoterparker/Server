@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using PjoterParker.Core.Events;
+﻿using PjoterParker.Core.Events;
 
 namespace PjoterParker.Core.Commands
 {
@@ -20,6 +17,7 @@ namespace PjoterParker.Core.Commands
         }
 
         public IEvent Event { get; set; }
+
         public EventMetadata Metadata { get; set; }
     }
 }

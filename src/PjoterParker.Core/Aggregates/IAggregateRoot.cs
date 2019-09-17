@@ -8,8 +8,8 @@ namespace PjoterParker.Core.Aggregates
     {
         IEnumerable<EventComposite> Events { get; }
 
-        long Version { get; set; }
-
         Guid Id { get; set; }
+
+        long Version { get; set; }
     }
 }

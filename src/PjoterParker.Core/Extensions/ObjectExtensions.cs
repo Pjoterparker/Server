@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PjoterParker.Core.Extensions
+﻿namespace PjoterParker.Core.Extensions
 {
     public static class ObjectExtensions
     {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PjoterParker.Core.Commands
+﻿namespace PjoterParker.Core.Commands
 {
     public class CommandComposite
     {
@@ -13,6 +9,7 @@ namespace PjoterParker.Core.Commands
         }
 
         public ICommand Command { get; set; }
+
         public CommandMetadata Metadata { get; set; }
     }
 }

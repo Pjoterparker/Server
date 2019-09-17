@@ -11,19 +11,19 @@ namespace PjoterParker.Core.Aggregates
     public class AggregateRoot<TAggregate> : IAggregateRoot
         where TAggregate : AggregateRoot<TAggregate>
     {
+        private readonly List<EventComposite> _events = new List<EventComposite>();
+
         protected Dictionary<string, Action<TAggregate, IEvent>> _applyMethods = new Dictionary<string, Action<TAggregate, IEvent>>();
 
         protected Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>> _specifications = new Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>>();
 
-        public Guid Id { get; set; }
-
-        private readonly List<EventComposite> _events = new List<EventComposite>();
+        public IComponentContext Context { get; set; }
 
         public IEnumerable<EventComposite> Events => _events;
 
-        public long Version { get; set; }
+        public Guid Id { get; set; }
 
-        public IComponentContext Context { get; set; }
+        public long Version { get; set; }
 
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
