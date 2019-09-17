@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PjoterParker.Api.Filters;
+using StackExchange.Redis;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace PjoterParker.Api
 {
@@ -46,47 +50,47 @@ namespace PjoterParker.Api
         {
             app.UseMvc(routes => { });
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pjoter Parker");
-            //    c.DisplayRequestDuration();
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pjoter Parker");
+                c.DisplayRequestDuration();
+            });
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            //services.AddMvc(configuration => { configuration.Filters.Add(typeof(ApiExceptionAttribute)); });
+            services.AddMvc(configuration => { configuration.Filters.Add(typeof(ApiExceptionAttribute)); });
             //services.AddDbContext<ApiDatabaseContext>();
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info { Title = "Pjoter Parker", Version = "v1" });
-            //    c.MapType<Guid>(() => new Schema { Type = "string", Format = "text", Description = "GUID" });
-            //    c.DescribeAllEnumsAsStrings();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Pjoter Parker", Version = "v1" });
+                c.MapType<Guid>(() => new Schema { Type = "string", Format = "text", Description = "GUID" });
+                c.DescribeAllEnumsAsStrings();
 
-            //    c.CustomSchemaIds(x =>
-            //    {
-            //        int plusIndex = x.FullName.IndexOf("+");
-            //        int lastIndexOfDot = x.FullName.LastIndexOf(".");
-            //        int length = 0;
+                c.CustomSchemaIds(x =>
+                {
+                    int plusIndex = x.FullName.IndexOf("+");
+                    int lastIndexOfDot = x.FullName.LastIndexOf(".");
+                    int length = 0;
 
-            //        if (plusIndex != -1)
-            //        {
-            //            length = plusIndex - lastIndexOfDot - 1;
-            //        }
-            //        else
-            //        {
-            //            length = x.FullName.Length - lastIndexOfDot - 1;
-            //        }
+                    if (plusIndex != -1)
+                    {
+                        length = plusIndex - lastIndexOfDot - 1;
+                    }
+                    else
+                    {
+                        length = x.FullName.Length - lastIndexOfDot - 1;
+                    }
 
-            //        return x.FullName.Substring(lastIndexOfDot + 1, length);
-            //    });
-            //});
+                    return x.FullName.Substring(lastIndexOfDot + 1, length);
+                });
+            });
 
-            //var applicationContainer = IocConfig.RegisterDependencies(services, _hostingEnvironment, _configuration);
-            //var cache = applicationContainer.Resolve<IServer>();
-            //cache.FlushDatabase();
+            var applicationContainer = IocConfig.RegisterDependencies(services, _hostingEnvironment, _configuration);
+            var cache = applicationContainer.Resolve<IServer>();
+            cache.FlushDatabase();
 
             return new AutofacServiceProvider(null);
         }

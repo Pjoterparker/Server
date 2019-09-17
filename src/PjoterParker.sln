@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.Development", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.Api", "PjoterParker.Api\PjoterParker.Api.csproj", "{9C2D0BF1-BF30-459E-8653-748FADC407E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.Common", "PjoterParker.Common\PjoterParker.Common.csproj", "{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9C2D0BF1-BF30-459E-8653-748FADC407E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C2D0BF1-BF30-459E-8653-748FADC407E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C2D0BF1-BF30-459E-8653-748FADC407E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

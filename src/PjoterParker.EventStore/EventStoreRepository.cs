@@ -13,7 +13,7 @@ using StackExchange.Redis;
 
 namespace PjoterParker.Core.EventStore
 {
-    public class EventStoreRepository : IAggregateStore
+    public class EventStoreAggregateStore : IAggregateStore
     {
         private const int READ_PAGE_SIZE = 500;
 
@@ -25,7 +25,7 @@ namespace PjoterParker.Core.EventStore
 
         private readonly IEventStoreConnection _eventStore;
 
-        public EventStoreRepository(IEventStoreConnection eventStore, IDatabase cache, IComponentContext context)
+        public EventStoreAggregateStore(IEventStoreConnection eventStore, IDatabase cache, IComponentContext context)
         {
             _eventStore = eventStore;
             _cache = cache;
