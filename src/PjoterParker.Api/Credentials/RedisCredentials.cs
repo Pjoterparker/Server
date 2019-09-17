@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using PjoterParker.Common.Credentials;
+﻿using PjoterParker.Common.Credentials;
+using PjoterParker.Core.Credentials;
 
 namespace PjoterParker.Api.Credentials
 {
-    public class RedisCredentials : RedisCredentialsBase
+    public class RedisCredentials : IConnectionString
     {
-        public RedisCredentials(IConfiguration configuration) : base(configuration)
+        public RedisCredentials(RedisCredentialsBase credentials)
         {
+            ConnectionString = credentials.ConnectionString;
         }
+
+        public string ConnectionString { get; private set; }
     }
 }

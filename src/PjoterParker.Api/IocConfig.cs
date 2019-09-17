@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -10,10 +9,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PjoterParker.Api.Credentials;
+using PjoterParker.Api.Database;
 using PjoterParker.Common;
 using PjoterParker.Common.Credentials;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Credentials;
 using PjoterParker.Core.EventStore;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
@@ -27,19 +28,17 @@ namespace PjoterParker.Api
     {
         public static void OverrideWithLocalCredentials(ContainerBuilder builder)
         {
-            //builder.Register(b =>
-            //{
-            //    var configuration = b.Resolve<IConfiguration>();
-            //    var credentials = new ApiDatabaseCredentials(configuration);
-            //    credentials.BuildLocalConnectionString();
+            builder.Register(b =>
+            {
+                var configuration = b.Resolve<IConfiguration>();
+                return new ApiDatabaseCredentials(new LocalDatabaseCredentials(configuration, "Database"));
+            }).SingleInstance();
 
-            //    return credentials;
-            //}).SingleInstance();
+            
 
             builder.Register(b =>
             {
                 var configuration = b.Resolve<IConfiguration>();
-                var credentials = new EventStoreCredentials(configuration);
                 var settings = ConnectionSettings.Create();
                 settings.UseConsoleLogger();
                 settings.SetHeartbeatTimeout(TimeSpan.FromMinutes(1));
@@ -48,29 +47,26 @@ namespace PjoterParker.Api
 
                 return settings.Build();
             }).SingleInstance();
-
-            builder.Register(b =>
-            {
-                var configuration = b.Resolve<IConfiguration>();
-                return new EventStoreCredentials(configuration);
-            }).SingleInstance();
         }
 
         public static void RegisterCredentials(ContainerBuilder builder)
         {
-            //builder.Register(b =>
-            //{
-            //    var configuration = b.Resolve<IConfiguration>();
-            //    var credentials = new ApiDatabaseCredentials(configuration);
-            //    credentials.BuildConnectionString();
-
-            //    return credentials;
-            //}).SingleInstance();
+            builder.Register(b =>
+            {
+                var configuration = b.Resolve<IConfiguration>();
+                return new EventStoreCredentials(new EventStoreCredentialsBase(configuration));
+            }).SingleInstance();
 
             builder.Register(b =>
             {
                 var configuration = b.Resolve<IConfiguration>();
-                return new RedisCredentials(configuration);
+                return new ApiDatabaseCredentials(new SqlServerDatabaseCredentials(configuration, "Database"));
+            }).SingleInstance();
+
+            builder.Register(b =>
+            {
+                var configuration = b.Resolve<IConfiguration>();
+                return new RedisCredentials(new RedisCredentialsBase(configuration));
             }).SingleInstance();
         }
 

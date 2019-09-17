@@ -4,9 +4,9 @@ using PjoterParker.Core.Extensions;
 
 namespace PjoterParker.Common.Credentials
 {
-    public class EventStoreCredentials : IConnectionString
+    public sealed class EventStoreCredentialsBase : IConnectionString
     {
-        public EventStoreCredentials(IConfiguration configuration)
+        public EventStoreCredentialsBase(IConfiguration configuration)
         {
             User = configuration["EventStore:User"];
             Password = configuration["EventStore:Password"];
