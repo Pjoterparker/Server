@@ -5,6 +5,6 @@ namespace PjoterParker.Core.Events
 {
     public interface IEventFactory
     {
-        void Make(CommandComposite command, IEnumerable<EventComposite> @event);
+        IEnumerable<EventComposite> Make(CommandComposite command, IEnumerable<EventComposite> @event);
     }
 }

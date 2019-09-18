@@ -11,10 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PjoterParker.Api.Credentials;
 using PjoterParker.Api.Database;
 using PjoterParker.Common;
+using PjoterParker.Common.Commands;
 using PjoterParker.Common.Credentials;
+using PjoterParker.Common.Events;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Credentials;
+using PjoterParker.Core.Events;
 using PjoterParker.Core.EventStore;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
@@ -140,9 +143,9 @@ namespace PjoterParker.Api
             builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
             //builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(IEventHandlerAsync<>)).InstancePerLifetimeScope();
 
-            //builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
-            //builder.RegisterType<CommandBuilder>().As<ICommandBuilder>().InstancePerLifetimeScope();
-            //builder.RegisterType<EventBuilder>().As<IEventBuilder>().InstancePerLifetimeScope();
+            builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
+            builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<EventFactory>().As<IEventFactory>().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(ICommandHandlerAsync<>)).InstancePerLifetimeScope();
 
             //builder.RegisterType<QueryDispatcher>().As<IQueryDispatcher>().InstancePerRequest().InstancePerLifetimeScope();

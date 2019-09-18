@@ -2,10 +2,9 @@
 {
     public class CommandComposite
     {
-        public CommandComposite(ICommand command, CommandMetadata metadata)
+        public CommandComposite(ICommand command)
         {
             Command = command;
-            Metadata = metadata;
         }
 
         public ICommand Command { get; set; }
