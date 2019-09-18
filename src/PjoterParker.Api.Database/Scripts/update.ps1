@@ -1,7 +1,6 @@
 ﻿param(
 [Parameter(Mandatory=$false)][string]$buildPath,
-[string]$configuration,
-[string]$migration
+[string]$configuration
 )
 
 if(!($buildPath)){
@@ -9,9 +8,9 @@ if(!($buildPath)){
 }
 else
 {
-    $buildPath = Join-Path $buildPath 'PjoterParker.Database'
+    $buildPath = Join-Path $buildPath 'PjoterParker.Api.Database'
 }
 
 $Env:ASPNETCORE_ENVIRONMENT = $configuration
 Set-Location $buildPath
-dotnet ef migrations add $migration --startup-project ../PjoterParker.Api --verbose
+dotnet ef database update --startup-project ../PjoterParker.Api --verbose

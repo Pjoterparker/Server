@@ -21,6 +21,7 @@ using PjoterParker.Core.Events;
 using PjoterParker.Core.EventStore;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
+using PjoterParker.Database;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Redis;
@@ -153,7 +154,7 @@ namespace PjoterParker.Api
 
             builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(AppAbstractValidation<>)).InstancePerLifetimeScope();
 
-            //builder.RegisterType<ApiDatabaseContext>().As<IApiDatabaseContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ApiDatabaseContext>().As<IApiDatabaseContext>().InstancePerLifetimeScope();
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();

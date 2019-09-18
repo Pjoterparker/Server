@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Api", "PjoterP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Common", "PjoterParker.Common\PjoterParker.Common.csproj", "{BDF55178-AF2E-44A0-8B0E-EE35ED5B6D97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Api.Database", "PjoterParker.Database\PjoterParker.Api.Database.csproj", "{58106FFA-090E-4345-A70F-5A79C43C1F05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Api.Database", "PjoterParker.Api.Database\PjoterParker.Api.Database.csproj", "{58106FFA-090E-4345-A70F-5A79C43C1F05}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.Events", "PjoterParker.Events\PjoterParker.Events.csproj", "{C67291A6-8826-4F80-9988-68636D1C2ECC}"
 EndProject

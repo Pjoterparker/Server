@@ -4,7 +4,7 @@ using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Services;
 using PjoterParker.Core.Validation;
-using PjoterParker.Domain;
+using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Api.Controllers.Locations
 {

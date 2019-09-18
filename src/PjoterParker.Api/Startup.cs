@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PjoterParker.Api.Database;
 using PjoterParker.Api.Filters;
 using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Swagger;
@@ -55,7 +56,7 @@ namespace PjoterParker.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(configuration => { configuration.Filters.Add(typeof(ApiExceptionAttribute)); });
-            //services.AddDbContext<ApiDatabaseContext>();
+            services.AddDbContext<ApiDatabaseContext>();
 
             services.AddSwaggerGen(c =>
             {
