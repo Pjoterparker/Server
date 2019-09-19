@@ -10,6 +10,7 @@ namespace PjoterParker.Core.Commands
 
         public Guid EventId { get; set; }
         public string EventType { get; set; }
+
         private DateTimeOffset Timestamp { get; }
     }
 }

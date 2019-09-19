@@ -30,6 +30,7 @@
     <ProjectReference Include="..\PjoterParker.Development\PjoterParker.Development.csproj" />
     <ProjectReference Include="..\PjoterParker.Domain\PjoterParker.Domain.csproj" />
     <ProjectReference Include="..\PjoterParker.EventStore\PjoterParker.EventStore.csproj" />
+    <ProjectReference Include="..\PjoterParker.Events\PjoterParker.Events.csproj" />
   </ItemGroup>
 
 </Project>

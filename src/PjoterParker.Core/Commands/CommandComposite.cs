@@ -9,6 +9,6 @@
 
         public ICommand Command { get; set; }
 
-        public CommandMetadata Metadata { get; set; }
+        public CommandMetadata Metadata { get; set; } = new CommandMetadata();
     }
 }

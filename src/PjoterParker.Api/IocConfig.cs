@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
@@ -8,6 +9,7 @@ using EventStore.ClientAPI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Api.Credentials;
 using PjoterParker.Api.Database;
 using PjoterParker.Common;
@@ -37,8 +39,6 @@ namespace PjoterParker.Api
                 var configuration = b.Resolve<IConfiguration>();
                 return new ApiDatabaseCredentials(new LocalDatabaseCredentials(configuration, "Database"));
             }).SingleInstance();
-
-            
 
             builder.Register(b =>
             {
@@ -76,7 +76,8 @@ namespace PjoterParker.Api
 
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains("PjoterParker")).ToArray();
+            var assemblies = typeof(CreateLocation).GetTypeInfo().Assembly;
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
