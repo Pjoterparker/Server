@@ -76,7 +76,6 @@ namespace PjoterParker.Api
 
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
-            //var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(x => x.FullName.Contains("PjoterParker")).ToArray();
             var assemblies = typeof(CreateLocation).GetTypeInfo().Assembly;
 
             var builder = new ContainerBuilder();
@@ -156,6 +155,8 @@ namespace PjoterParker.Api
             builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(AppAbstractValidation<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<ApiDatabaseContext>().As<IApiDatabaseContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ApiDatabaseContext>().As<IUniquenessContext>().InstancePerLifetimeScope();
+
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();

@@ -5,7 +5,7 @@ using PjoterParker.Database;
 
 namespace PjoterParker.Api.Database
 {
-    public class ApiDatabaseContext : DbContext, IApiDatabaseContext
+    public class ApiDatabaseContext : DbContext, IApiDatabaseContext, IUniquenessContext
     {
         private readonly ApiDatabaseCredentials _credentials;
 
@@ -17,7 +17,9 @@ namespace PjoterParker.Api.Database
         }
 
         public DbSet<Location> Location { get; set; }
-      
+
+        public DbSet<UniquenessTable> UniquenessTable { get; set; }
+
         public void BeginTransaction()
         {
             Database.BeginTransaction();
@@ -42,6 +44,7 @@ namespace PjoterParker.Api.Database
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new LocationConfiguration());
+            modelBuilder.ApplyConfiguration(new UniquenessTableConfiguration());
         }
     }
 }
