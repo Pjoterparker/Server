@@ -17,16 +17,20 @@ namespace PjoterParker.Core.Commands
 
         private readonly IAggregateStore _aggregateStore;
 
+        private readonly IEventDispatcher _eventDispatcher;
+
         public CommandDispatcher(
             IComponentContext context,
             ICommandFactory commandFactory,
             IEventFactory eventFactory,
-            IAggregateStore aggregateStore)
+            IAggregateStore aggregateStore,
+            IEventDispatcher eventDispatcher)
         {
             _context = context;
             _commandFactory = commandFactory;
             _eventFactory = eventFactory;
             _aggregateStore = aggregateStore;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
@@ -47,6 +51,11 @@ namespace PjoterParker.Core.Commands
 
             _eventFactory.Make(commandComposite, aggregate.Events);
             await _aggregateStore.SaveAsync(aggregate);
+
+            foreach (var @event in aggregate.Events)
+            {
+                await _eventDispatcher.DispatchAsync(@event.Event);
+            }
         }
     }
 }

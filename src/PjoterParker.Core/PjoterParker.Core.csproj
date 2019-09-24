@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
-    <PackageReference Include="FluentValidation" Version="8.4.0" />
+    <Compile Remove="Store\**" />
+    <EmbeddedResource Remove="Store\**" />
+    <None Remove="Store\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Store\" />
+    <PackageReference Include="Autofac" Version="4.9.4" />
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
   </ItemGroup>
 
 </Project>

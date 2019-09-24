@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FluentValidation;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using PjoterParker.Core.Application;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
 using PjoterParker.Database;
@@ -14,10 +13,12 @@ namespace PjoterParker.Domain.Locations
         ISpecificationFor<LocationAggregate, LocationUpdated>
     {
         private readonly IApiDatabaseContext _database;
+        private readonly IUniquenessService _uniquenessService;
 
-        public LocationSpecification(IApiDatabaseContext database)
+        public LocationSpecification(IApiDatabaseContext database, IUniquenessService uniquenessService)
         {
             _database = database;
+            _uniquenessService = uniquenessService;
         }
 
         public IValidator<LocationAggregate> Apply(LocationCreated @event)
@@ -56,27 +57,26 @@ namespace PjoterParker.Domain.Locations
 
         public void MustHaveExistingId()
         {
-            RuleFor(x => x).CustomAsync(async (command, context, token) =>
+            RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
             {
-                //var exists = await _database.Location.AnyAsync(location => location.LocationId == command.Id, token);
-                //if (!exists)
-                //{
-                //    context.AddFailure(nameof(command.Id), "Location with that Id doesn't exists");
-                //}
+                var exists = await _database.Location.AnyAsync(location => location.LocationId == aggregate.Id, token);
+                if (!exists)
+                {
+                    context.AddFailure(nameof(aggregate.Id), "Location with that Id doesn't exists");
+                }
             });
         }
 
         public void MustHaveUniqueName()
         {
-            RuleFor(x => x).CustomAsync(async (command, context, token) =>
+            RuleFor(x => x).Custom((aggregate, context) =>
             {
-                //bool doesNameIsAlreadyInUseByAnotherLocation = await _database.Location
-                //.AnyAsync(location => location.Name == command.Name && location.LocationId != command.Id, token);
+                var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "locationName", aggregate.Name);
 
-                //if (doesNameIsAlreadyInUseByAnotherLocation)
-                //{
-                //    context.AddFailure(nameof(command.Name), "Location with that Name already exists");
-                //}
+                if (!doesNameIsUnique)
+                {
+                    context.AddFailure(nameof(aggregate.Name), "Location with that Name already exists");
+                }
             });
         }
     }

@@ -32,12 +32,12 @@ namespace PjoterParker.Core.EventStore
             _context = context;
         }
 
-        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId) where TAggregate : AggregateRoot<TAggregate>, new()
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId) where TAggregate : IAggregateRoot, new()
         {
             return await GetByIdAsync<TAggregate>(AggregateId, int.MaxValue);
         }
 
-        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId, int version) where TAggregate : AggregateRoot<TAggregate>, new()
+        public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId, int version) where TAggregate : IAggregateRoot, new()
         {
             if (version <= 0)
             {
@@ -86,7 +86,7 @@ namespace PjoterParker.Core.EventStore
             return aggregate;
         }
 
-        public TAggregate GetNew<TAggregate>() where TAggregate : AggregateRoot<TAggregate>, new()
+        public TAggregate GetNew<TAggregate>() where TAggregate : IAggregateRoot, new()
         {
             var model = new TAggregate();
             model.Context = _context;

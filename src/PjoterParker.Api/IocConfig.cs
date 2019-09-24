@@ -12,11 +12,13 @@ using Microsoft.Extensions.DependencyInjection;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Api.Credentials;
 using PjoterParker.Api.Database;
+using PjoterParker.Application;
 using PjoterParker.Common;
 using PjoterParker.Common.Commands;
 using PjoterParker.Common.Credentials;
 using PjoterParker.Common.Events;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Core.Application;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Credentials;
 using PjoterParker.Core.Events;
@@ -24,6 +26,8 @@ using PjoterParker.Core.EventStore;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
 using PjoterParker.Database;
+using PjoterParker.Development;
+using PjoterParker.EventHandlers;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Redis;
@@ -76,7 +80,8 @@ namespace PjoterParker.Api
 
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
-            var assemblies = typeof(CreateLocation).GetTypeInfo().Assembly;
+            var domainAssembly = typeof(CreateLocation).GetTypeInfo().Assembly;
+            var eventHandlersAssembly = typeof(LocationHandler).GetTypeInfo().Assembly;
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -140,30 +145,31 @@ namespace PjoterParker.Api
             //    return new AppProjectionsManager(manager, credentials);
             //}).SingleInstance();
 
-            //builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
-            //builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(IEventHandlerAsync<>)).InstancePerLifetimeScope();
+            builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(eventHandlersAssembly).AsClosedTypesOf(typeof(IEventHandlerAsync<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
             builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();
             builder.RegisterType<EventFactory>().As<IEventFactory>().InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(ICommandHandlerAsync<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ICommandHandlerAsync<>)).InstancePerLifetimeScope();
 
             //builder.RegisterType<QueryDispatcher>().As<IQueryDispatcher>().InstancePerRequest().InstancePerLifetimeScope();
             //builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(IQueryHandler<,>)).InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(AppAbstractValidation<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(AppAbstractValidation<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<ApiDatabaseContext>().As<IApiDatabaseContext>().InstancePerLifetimeScope();
             builder.RegisterType<ApiDatabaseContext>().As<IUniquenessContext>().InstancePerLifetimeScope();
 
+            builder.RegisterType<UniquenessService>().As<IUniquenessService>().InstancePerLifetimeScope();
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(assemblies).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(assemblies)
+            builder.RegisterAssemblyTypes(domainAssembly)
             .Where(t => typeof(Profile).IsAssignableFrom(t) && !t.IsAbstract && t.IsPublic)
             .As<Profile>().SingleInstance();
 

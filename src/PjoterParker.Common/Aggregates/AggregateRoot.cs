@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
 using FluentValidation.Results;
+using PjoterParker.Common.Helpers;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 
@@ -23,7 +24,7 @@ namespace PjoterParker.Core.Aggregates
 
         public Guid Id { get; set; }
 
-        public long Version { get; set; }
+        public long Version { get; set; } = -1;
 
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
@@ -45,6 +46,53 @@ namespace PjoterParker.Core.Aggregates
             }
 
             _events.Add(new EventComposite(@event));
+        }
+
+        protected bool Compare<TType>(string propertyName, TType oldValue, TType newValue) where TType : class, IEquatable<TType>
+        {
+            if (!CompareHelper.ClassEquals(oldValue, newValue))
+            {
+                var propertyChangedEvent = new PropertyChanged<TAggregate>(
+                    Id,
+                    typeof(TAggregate).FullName,
+                    typeof(TType).FullName,
+                    propertyName,
+                    oldValue?.ToString(),
+                    newValue?.ToString());
+
+                Apply(propertyChangedEvent);
+                AddEvent(propertyChangedEvent);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        protected bool Compare<TType>(string propertyName, TType? oldValue, TType? newValue) where TType : struct
+        {
+            if (!CompareHelper.StructEquals(oldValue, newValue))
+            {
+                var propertyChangedEvent = new PropertyChanged<TAggregate>(
+                    Id,
+                    typeof(TAggregate).FullName,
+                    typeof(TType).FullName,
+                    propertyName,
+                    oldValue?.ToString(),
+                    newValue?.ToString());
+
+                Apply(propertyChangedEvent);
+                AddEvent(propertyChangedEvent);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public void Apply(PropertyChanged<TAggregate> @event)
+        {
+            GetType().GetProperty(@event.PropertyName).SetValue(this, @event.NewValue);
         }
     }
 }

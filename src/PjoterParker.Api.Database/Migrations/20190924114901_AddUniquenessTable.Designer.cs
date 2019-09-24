@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PjoterParker.Api.Database;
 
 namespace PjoterParker.Api.Database.Migrations
 {
     [DbContext(typeof(ApiDatabaseContext))]
-    partial class ApiDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190924114901_AddUniquenessTable")]
+    partial class AddUniquenessTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,9 +51,7 @@ namespace PjoterParker.Api.Database.Migrations
                     b.Property<string>("Value")
                         .HasMaxLength(1024);
 
-                    b.Property<Guid>("AggrageteId");
-
-                    b.HasKey("Key", "Value", "AggrageteId");
+                    b.HasKey("Key", "Value");
 
                     b.ToTable("UniquenessTable");
                 });

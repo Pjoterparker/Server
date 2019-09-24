@@ -1,11 +1,11 @@
-﻿namespace PjoterParker.Core.Application
+﻿using System;
+
+namespace PjoterParker.Core.Application
 {
     public interface IUniquenessService
     {
-        void Add(string key, string value);
+        bool IsUnique(Guid aggrageteId, string key, string value);
 
-        bool IsUnique(string key, string value);
-
-        void Remove(string key, string value);
+        bool Remove(Guid aggrageteId, string key, string value);
     }
 }

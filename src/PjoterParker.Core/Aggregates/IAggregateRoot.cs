@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Autofac;
 using PjoterParker.Core.Commands;
 
 namespace PjoterParker.Core.Aggregates
 {
     public interface IAggregateRoot
     {
+        IComponentContext Context { get; set; }
+
         IEnumerable<EventComposite> Events { get; }
 
         Guid Id { get; set; }
