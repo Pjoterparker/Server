@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using PjoterParker.Api.Database.Entities;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
@@ -19,10 +17,13 @@ namespace PjoterParker.EventHandlers
 
         private readonly IAggregateStore _aggregateStore;
 
-        public LocationHandler(IApiDatabaseContext database, IAggregateStore repository)
+        private readonly IMapper _mapper;
+
+        public LocationHandler(IApiDatabaseContext database, IAggregateStore repository, IMapper mapper)
         {
             _database = database;
             _aggregateStore = repository;
+            _mapper = mapper;
         }
 
         public Task HandleAsync(LocationCreated @event)
@@ -36,9 +37,8 @@ namespace PjoterParker.EventHandlers
         public async Task HandleAsync(LocationUpdated @event)
         {
             var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(@event.LocationId);
-
-            //_database.Location.Update(_mapper.Map<Location>(location));
-            //_database.SaveChanges();
+            _database.Location.Update(_mapper.Map<Location>(location));
+            _database.SaveChanges();
         }
     }
 }

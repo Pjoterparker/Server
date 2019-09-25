@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Autofac;
 using FluentValidation;
 using FluentValidation.Results;
+using Newtonsoft.Json;
 using PjoterParker.Common.Helpers;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
@@ -18,8 +19,10 @@ namespace PjoterParker.Core.Aggregates
 
         protected Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>> _specifications = new Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>>();
 
+        [JsonIgnore]
         public IComponentContext Context { get; set; }
 
+        [JsonIgnore]
         public IEnumerable<EventComposite> Events => _events;
 
         public Guid Id { get; set; }

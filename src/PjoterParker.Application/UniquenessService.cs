@@ -18,15 +18,25 @@ namespace PjoterParker.Application
 
         public bool IsUnique(Guid aggrageteId, string key, string value)
         {
-            var result = _context.UniquenessTable.FirstOrDefault(u => u.Key == key && u.Value == value);
-            if (result.IsNull())
+            var isUnique = !_context.UniquenessTable.Any(u => u.Key == key && u.Value == value);
+            if (isUnique)
             {
-                _context.UniquenessTable.Add(new UniquenessTable(key, value, aggrageteId));
+                var result = _context.UniquenessTable.FirstOrDefault(u => u.Key == key && u.AggrageteId == aggrageteId);
+                if (result.IsNull())
+                {
+                    _context.UniquenessTable.Add(new UniquenessTable(key, value, aggrageteId));
+                }
+                else
+                {
+                    result.Value = value;
+                    _context.UniquenessTable.Update(result);
+                }
+
                 _context.SaveChanges();
                 return true;
             }
 
-            return result.AggrageteId == aggrageteId;
+            return false;
         }
 
         public bool Remove(Guid aggrageteId, string key, string value)

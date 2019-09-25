@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Runtime.Serialization;
+using System.Linq;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Extensions;
@@ -7,7 +7,6 @@ using PjoterParker.Events;
 
 namespace PjoterParker.Domain.Locations
 {
-    [DataContract]
     public class LocationAggregate : AggregateRoot<LocationAggregate>,
       IApply<LocationCreated>,
       IApply<LocationUpdated>
@@ -21,13 +20,10 @@ namespace PjoterParker.Domain.Locations
             _applyMethods.AddMethod<LocationAggregate, LocationUpdated>();
         }
 
-        [DataMember]
         public string City { get; set; }
 
-        [DataMember]
         public string Name { get; set; }
 
-        [DataMember]
         public string Street { get; set; }
 
         public void Apply(LocationCreated @event)
@@ -48,16 +44,16 @@ namespace PjoterParker.Domain.Locations
             AddEvent(locationCreated);
         }
 
-        //public void Update(UpdateLocationBase.Command command)
-        //{
-        //    Compare(nameof(Name), Name, command.Name);
-        //    Compare(nameof(City), City, command.City);
-        //    Compare(nameof(Street), Street, command.Street);
+        public void Update(UpdateLocation.Command command)
+        {
+            Compare(nameof(Name), Name, command.Name);
+            Compare(nameof(City), City, command.City);
+            Compare(nameof(Street), Street, command.Street);
 
-        //    if (Events.Any())
-        //    {
-        //        AddEvent(new LocationUpdated(command.LocationId));
-        //    }
-        //}
+            if (Events.Any())
+            {
+                AddEvent(new LocationUpdated(command.LocationId));
+            }
+        }
     }
 }
