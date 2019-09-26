@@ -4,6 +4,12 @@ namespace PjoterParker.Api.Database.Migrations
 {
     public partial class AddUniquenessTable : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "UniquenessTable");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -17,12 +23,6 @@ namespace PjoterParker.Api.Database.Migrations
                 {
                     table.PrimaryKey("PK_UniquenessTable", x => new { x.Key, x.Value });
                 });
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "UniquenessTable");
         }
     }
 }

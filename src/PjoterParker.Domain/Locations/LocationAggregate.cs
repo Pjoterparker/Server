@@ -8,8 +8,7 @@ using PjoterParker.Events;
 namespace PjoterParker.Domain.Locations
 {
     public class LocationAggregate : AggregateRoot<LocationAggregate>,
-      IApply<LocationCreated>,
-      IApply<LocationUpdated>
+      IApply<LocationCreated>
     {
         public LocationAggregate()
         {
@@ -17,7 +16,6 @@ namespace PjoterParker.Domain.Locations
             _specifications.AddMethod<LocationAggregate, LocationUpdated>();
 
             _applyMethods.AddMethod<LocationAggregate, LocationCreated>();
-            _applyMethods.AddMethod<LocationAggregate, LocationUpdated>();
         }
 
         public string City { get; set; }
@@ -34,13 +32,9 @@ namespace PjoterParker.Domain.Locations
             Street = @event.Street;
         }
 
-        public void Apply(LocationUpdated @event)
+        public void Create(Guid locationId, CreateLocation.Command command)
         {
-        }
-
-        public void Create(Guid aggregateId, CreateLocation.Command command)
-        {
-            var locationCreated = new LocationCreated(aggregateId, command.Name, command.City, command.Street);
+            var locationCreated = new LocationCreated(locationId, command.Name, command.City, command.Street);
             AddEvent(locationCreated);
         }
 

@@ -5,6 +5,12 @@ namespace PjoterParker.Api.Database.Migrations
 {
     public partial class Init : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Location");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -20,12 +26,6 @@ namespace PjoterParker.Api.Database.Migrations
                 {
                     table.PrimaryKey("PK_Location", x => x.LocationId);
                 });
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Location");
         }
     }
 }

@@ -21,9 +21,9 @@ namespace PjoterParker.Api.Controllers.Locations
 
         public class Handler : ICommandHandlerAsync<Command>
         {
-            private readonly IGuidService _guidService;
-
             private readonly IAggregateStore _aggregateStore;
+
+            private readonly IGuidService _guidService;
 
             public Handler(IGuidService guidService, IAggregateStore aggregateStore)
             {

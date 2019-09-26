@@ -4,20 +4,19 @@ using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Validation;
+using PjoterParker.Domain.Locations;
 
-namespace PjoterParker.Domain.Locations
+namespace PjoterParker.Domain.Spots
 {
-    public class UpdateLocation
+    public class UpdateSpot
     {
         public class Command : ICommand
         {
-            public string City { get; set; }
-
-            public Guid LocationId { get; set; }
-
             public string Name { get; set; }
 
-            public string Street { get; set; }
+            public Guid? OwnerId { get; set; }
+
+            public Guid SpotId { get; set; }
         }
 
         public class Handler : ICommandHandlerAsync<Command>
@@ -31,9 +30,9 @@ namespace PjoterParker.Domain.Locations
 
             public async Task<IAggregateRoot> ExecuteAsync(Command command)
             {
-                var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
-                location.Update(command);
-                return location;
+                var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);
+                spot.Update(command);
+                return spot;
             }
         }
 
@@ -41,8 +40,6 @@ namespace PjoterParker.Domain.Locations
         {
             public Validator()
             {
-                RuleFor(x => x.Street).NotEmpty().MaximumLength(255);
-                RuleFor(x => x.City).NotEmpty().MaximumLength(255);
                 RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
             }
         }

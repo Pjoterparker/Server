@@ -5,6 +5,22 @@ namespace PjoterParker.Api.Database.Migrations
 {
     public partial class AddAggrageteIdToUniquenessTable : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropPrimaryKey(
+                name: "PK_UniquenessTable",
+                table: "UniquenessTable");
+
+            migrationBuilder.DropColumn(
+                name: "AggrageteId",
+                table: "UniquenessTable");
+
+            migrationBuilder.AddPrimaryKey(
+                name: "PK_UniquenessTable",
+                table: "UniquenessTable",
+                columns: new[] { "Key", "Value" });
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropPrimaryKey(
@@ -21,22 +37,6 @@ namespace PjoterParker.Api.Database.Migrations
                 name: "PK_UniquenessTable",
                 table: "UniquenessTable",
                 columns: new[] { "Key", "Value", "AggrageteId" });
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_UniquenessTable",
-                table: "UniquenessTable");
-
-            migrationBuilder.DropColumn(
-                name: "AggrageteId",
-                table: "UniquenessTable");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_UniquenessTable",
-                table: "UniquenessTable",
-                columns: new[] { "Key", "Value" });
         }
     }
 }

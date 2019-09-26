@@ -3,37 +3,40 @@ using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Services;
 using PjoterParker.Core.Validation;
+using PjoterParker.Domain.Locations;
 
-namespace PjoterParker.Domain.Locations
+namespace PjoterParker.Api.Controllers.Locations
 {
-    public class UpdateLocation
+    public class CreateSpot
     {
         public class Command : ICommand
         {
-            public string City { get; set; }
-
             public Guid LocationId { get; set; }
 
             public string Name { get; set; }
 
-            public string Street { get; set; }
+            public Guid? OwnerId { get; set; }
         }
 
         public class Handler : ICommandHandlerAsync<Command>
         {
             private readonly IAggregateStore _aggregateStore;
 
-            public Handler(IAggregateStore aggregateStore)
+            private readonly IGuidService _guidService;
+
+            public Handler(IGuidService guidService, IAggregateStore aggregateStore)
             {
+                _guidService = guidService;
                 _aggregateStore = aggregateStore;
             }
 
-            public async Task<IAggregateRoot> ExecuteAsync(Command command)
+            public Task<IAggregateRoot> ExecuteAsync(Command command)
             {
-                var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
-                location.Update(command);
-                return location;
+                var spot = _aggregateStore.GetNew<SpotAggregate>();
+                spot.Create(_guidService.New(), command);
+                return Task.FromResult<IAggregateRoot>(spot);
             }
         }
 
@@ -41,8 +44,6 @@ namespace PjoterParker.Domain.Locations
         {
             public Validator()
             {
-                RuleFor(x => x.Street).NotEmpty().MaximumLength(255);
-                RuleFor(x => x.City).NotEmpty().MaximumLength(255);
                 RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
             }
         }

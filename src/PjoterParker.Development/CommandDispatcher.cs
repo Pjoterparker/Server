@@ -9,15 +9,15 @@ namespace PjoterParker.Core.Commands
 {
     public class CommandDispatcher : ICommandDispatcher
     {
+        private readonly IAggregateStore _aggregateStore;
+
         private readonly ICommandFactory _commandFactory;
 
         private readonly IComponentContext _context;
 
-        private readonly IEventFactory _eventFactory;
-
-        private readonly IAggregateStore _aggregateStore;
-
         private readonly IEventDispatcher _eventDispatcher;
+
+        private readonly IEventFactory _eventFactory;
 
         public CommandDispatcher(
             IComponentContext context,

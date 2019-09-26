@@ -4,13 +4,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace PjoterParker.Api.Database.Migrations
 {
     [DbContext(typeof(ApiDatabaseContext))]
-    public partial class ApiDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190926130739_AddSpotTable")]
+    public partial class AddSpotTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

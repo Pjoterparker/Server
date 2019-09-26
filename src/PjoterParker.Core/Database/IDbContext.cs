@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace PjoterParker.Core.Services
+﻿namespace PjoterParker.Core.Services
 {
     public interface IDbContext
     {

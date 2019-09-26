@@ -8,42 +8,35 @@ using PjoterParker.Events;
 
 namespace PjoterParker.Domain.Locations
 {
-    public class LocationSpecification : AppAbstractValidation<LocationAggregate>,
-        ISpecificationFor<LocationAggregate, LocationCreated>,
-        ISpecificationFor<LocationAggregate, LocationUpdated>
+    public class SpotSpecification : AppAbstractValidation<SpotAggregate>,
+        ISpecificationFor<SpotAggregate, SpotCreated>,
+        ISpecificationFor<SpotAggregate, SpotUpdated>
     {
         private readonly IApiDatabaseContext _database;
 
         private readonly IUniquenessService _uniquenessService;
 
-        public LocationSpecification(IApiDatabaseContext database, IUniquenessService uniquenessService)
+        public SpotSpecification(IApiDatabaseContext database, IUniquenessService uniquenessService)
         {
             _database = database;
             _uniquenessService = uniquenessService;
         }
 
-        public IValidator<LocationAggregate> Apply(LocationCreated @event)
+        public IValidator<SpotAggregate> Apply(SpotCreated @event)
         {
             MusHaveName();
-            MusHaveCity();
-            MusHaveStreet();
+            MustHaveExistingLocationId();
             MustHaveUniqueName();
             return this;
         }
 
-        public IValidator<LocationAggregate> Apply(LocationUpdated @event)
+        public IValidator<SpotAggregate> Apply(SpotUpdated @event)
         {
             MusHaveName();
-            MusHaveCity();
-            MusHaveStreet();
             MustHaveExistingId();
+            MustHaveExistingLocationId();
             MustHaveUniqueName();
             return this;
-        }
-
-        public void MusHaveCity()
-        {
-            RuleFor(x => x.City).NotEmpty().MaximumLength(255);
         }
 
         public void MusHaveName()
@@ -51,16 +44,23 @@ namespace PjoterParker.Domain.Locations
             RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
         }
 
-        public void MusHaveStreet()
-        {
-            RuleFor(x => x.Street).NotEmpty().MaximumLength(255);
-        }
-
         public void MustHaveExistingId()
         {
             RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
             {
-                var exists = await _database.Location.AnyAsync(location => location.LocationId == aggregate.Id, token);
+                var exists = await _database.Spot.AnyAsync(spot => spot.SpotId == aggregate.Id, token);
+                if (!exists)
+                {
+                    context.AddFailure(nameof(aggregate.Id), "Spot with that Id doesn't exists");
+                }
+            });
+        }
+
+        public void MustHaveExistingLocationId()
+        {
+            RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
+            {
+                var exists = await _database.Location.AnyAsync(location => location.LocationId == aggregate.LocationId, token);
                 if (!exists)
                 {
                     context.AddFailure(nameof(aggregate.Id), "Location with that Id doesn't exists");
@@ -72,11 +72,11 @@ namespace PjoterParker.Domain.Locations
         {
             RuleFor(x => x).Custom((aggregate, context) =>
             {
-                var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "locationName", aggregate.Name);
+                var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "spotName", aggregate.Name);
 
                 if (!doesNameIsUnique)
                 {
-                    context.AddFailure(nameof(aggregate.Name), "Location with that Name already exists");
+                    context.AddFailure(nameof(aggregate.Name), "Spot with that Name already exists");
                 }
             });
         }

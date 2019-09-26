@@ -7,5 +7,7 @@ namespace PjoterParker.Database
     public interface IApiDatabaseContext : IDbContext
     {
         DbSet<Location> Location { get; set; }
+
+        DbSet<Spot> Spot { get; set; }
     }
 }

@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PjoterParker.Common\PjoterParker.Common.csproj" />
     <ProjectReference Include="..\PjoterParker.Core\PjoterParker.Core.csproj" />
   </ItemGroup>
 

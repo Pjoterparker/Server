@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using PjoterParker.Core.Commands;
+﻿using PjoterParker.Core.Commands;
 using PjoterParker.Core.Services;
 
 namespace PjoterParker.Common.Commands

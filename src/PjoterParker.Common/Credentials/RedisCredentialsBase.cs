@@ -6,15 +6,15 @@ namespace PjoterParker.Common.Credentials
 {
     public sealed class RedisCredentialsBase : IConnectionString
     {
+        private readonly bool _allowAdmin;
+
+        private readonly bool _isSsl;
+
         private readonly string _name;
 
         private readonly string _password;
 
         private readonly int _port;
-
-        private readonly bool _isSsl;
-
-        private readonly bool _allowAdmin;
 
         public RedisCredentialsBase(IConfiguration configuration)
         {

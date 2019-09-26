@@ -8,23 +8,23 @@ namespace PjoterParker.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LocationController : ControllerBase
+    public class SpotController : ControllerBase
     {
         private readonly ICommandDispatcher _commandDispatcher;
 
-        public LocationController(ICommandDispatcher commandDispatcher)
+        public SpotController(ICommandDispatcher commandDispatcher)
         {
             _commandDispatcher = commandDispatcher;
         }
 
         [HttpPost]
-        public async Task CreateSpot(CreateLocation.Command value)
+        public async Task CreateLocation(CreateSpot.Command value)
         {
             await _commandDispatcher.DispatchAsync(value);
         }
 
         [HttpPut]
-        public async Task UpdateSpot(UpdateLocation.Command value)
+        public async Task UpdateLocation(UpdateLocation.Command value)
         {
             await _commandDispatcher.DispatchAsync(value);
         }

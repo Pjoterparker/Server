@@ -4,12 +4,10 @@ using PjoterParker.Api.Database.Entities;
 
 namespace PjoterParker.Api.Database.Configurations
 {
-    public class LocationConfiguration : IEntityTypeConfiguration<Location>
+    public class SpotConfiguration : IEntityTypeConfiguration<Spot>
     {
-        public void Configure(EntityTypeBuilder<Location> builder)
+        public void Configure(EntityTypeBuilder<Spot> builder)
         {
-            builder.Property(x => x.City).IsRequired().HasMaxLength(255);
-            builder.Property(b => b.Street).IsRequired().HasMaxLength(255);
             builder.Property(b => b.Name).IsRequired().HasMaxLength(255);
         }
     }

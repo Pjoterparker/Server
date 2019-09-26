@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using PjoterParker.Events;
 
@@ -23,6 +24,8 @@ namespace PjoterParker.Api.Database.Entities
         [Key] public Guid LocationId { get; set; }
 
         public string Name { get; set; }
+
+        public virtual ICollection<Spot> Spots { get; set; } = new HashSet<Spot>();
 
         public string Street { get; set; }
     }

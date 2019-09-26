@@ -11,10 +11,10 @@ namespace PjoterParker.Api.Database.Entities
             AggrageteId = aggrageteId;
         }
 
+        public Guid AggrageteId { get; set; }
+
         public string Key { get; set; }
 
         public string Value { get; set; }
-
-        public Guid AggrageteId { get; set; }
     }
 }

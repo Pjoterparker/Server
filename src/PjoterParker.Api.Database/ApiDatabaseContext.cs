@@ -9,7 +9,6 @@ namespace PjoterParker.Api.Database
     {
         private readonly ApiDatabaseCredentials _credentials;
 
-          
         public ApiDatabaseContext(ApiDatabaseCredentials credentials)
         {
             _credentials = credentials;
@@ -17,6 +16,8 @@ namespace PjoterParker.Api.Database
         }
 
         public DbSet<Location> Location { get; set; }
+
+        public DbSet<Spot> Spot { get; set; }
 
         public DbSet<UniquenessTable> UniquenessTable { get; set; }
 
@@ -44,6 +45,7 @@ namespace PjoterParker.Api.Database
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new LocationConfiguration());
+            modelBuilder.ApplyConfiguration(new SpotConfiguration());
             modelBuilder.ApplyConfiguration(new UniquenessTableConfiguration());
         }
     }

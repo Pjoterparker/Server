@@ -55,7 +55,7 @@ namespace PjoterParker.Api
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-          services.AddMvc(configuration => { configuration.Filters.Add(typeof(ApiExceptionAttribute)); });
+            services.AddMvc(configuration => { configuration.Filters.Add(typeof(ApiExceptionAttribute)); });
             services.AddDbContext<ApiDatabaseContext>();
 
             services.AddSwaggerGen(c =>

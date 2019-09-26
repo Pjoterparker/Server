@@ -9,9 +9,9 @@ using PjoterParker.Events;
 
 namespace PjoterParker.EventHandlers
 {
-    public class LocationHandler :
-        IEventHandlerAsync<LocationCreated>,
-        IEventHandlerAsync<LocationUpdated>
+    public class SpotHandler :
+        IEventHandlerAsync<SpotCreated>,
+        IEventHandlerAsync<SpotUpdated>
     {
         private readonly IAggregateStore _aggregateStore;
 
@@ -19,25 +19,25 @@ namespace PjoterParker.EventHandlers
 
         private readonly IMapper _mapper;
 
-        public LocationHandler(IApiDatabaseContext database, IAggregateStore repository, IMapper mapper)
+        public SpotHandler(IApiDatabaseContext database, IAggregateStore repository, IMapper mapper)
         {
             _database = database;
             _aggregateStore = repository;
             _mapper = mapper;
         }
 
-        public Task HandleAsync(LocationCreated @event)
+        public Task HandleAsync(SpotCreated @event)
         {
-            _database.Location.Add(new Location(@event));
+            _database.Spot.Add(new Spot(@event));
             _database.SaveChanges();
 
             return Task.CompletedTask;
         }
 
-        public async Task HandleAsync(LocationUpdated @event)
+        public async Task HandleAsync(SpotUpdated @event)
         {
-            var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(@event.LocationId);
-            _database.Location.Update(_mapper.Map<Location>(location));
+            var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(@event.SpotId);
+            _database.Spot.Update(_mapper.Map<Spot>(spot));
             _database.SaveChanges();
         }
     }

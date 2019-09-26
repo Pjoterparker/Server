@@ -9,6 +9,7 @@ namespace PjoterParker.Core.Commands
         public Guid CorrelationId { get; set; }
 
         public Guid EventId { get; set; }
+
         public string EventType { get; set; }
 
         private DateTimeOffset Timestamp { get; }

@@ -29,6 +29,11 @@ namespace PjoterParker.Core.Aggregates
 
         public long Version { get; set; } = -1;
 
+        public void Apply(PropertyChanged<TAggregate> @event)
+        {
+            GetType().GetProperty(@event.PropertyName).SetValue(this, @event.NewValue);
+        }
+
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
             string eventName = @event.GetType().Name;
@@ -91,11 +96,6 @@ namespace PjoterParker.Core.Aggregates
             }
 
             return false;
-        }
-
-        public void Apply(PropertyChanged<TAggregate> @event)
-        {
-            GetType().GetProperty(@event.PropertyName).SetValue(this, @event.NewValue);
         }
     }
 }
