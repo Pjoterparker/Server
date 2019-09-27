@@ -18,10 +18,6 @@ namespace PjoterParker.Core.Events
 
         public string AggregateName { get; set; }
 
-        public Guid CommandId { get; set; }
-
-        public Guid Id { get; set; }
-
         public string NewValue { get; set; }
 
         public string OldValue { get; set; }
