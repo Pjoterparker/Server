@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using PjoterParker.Api.Database.Entities;
 using PjoterParker.Core.Aggregates;
@@ -11,7 +12,9 @@ namespace PjoterParker.EventHandlers
 {
     public class SpotHandler :
         IEventHandlerAsync<SpotCreated>,
-        IEventHandlerAsync<SpotUpdated>
+        IEventHandlerAsync<OwnerAssignedToSpot>,
+        IEventHandlerAsync<MarkSpotAsUnoccupied>,
+        IEventHandlerAsync<PropertyChanged<SpotAggregate>>
     {
         private readonly IAggregateStore _aggregateStore;
 
@@ -19,11 +22,9 @@ namespace PjoterParker.EventHandlers
 
         private readonly IMapper _mapper;
 
-        public SpotHandler(IApiDatabaseContext database, IAggregateStore repository, IMapper mapper)
+        public SpotHandler(IApiDatabaseContext database)
         {
             _database = database;
-            _aggregateStore = repository;
-            _mapper = mapper;
         }
 
         public Task HandleAsync(SpotCreated @event)
@@ -34,11 +35,36 @@ namespace PjoterParker.EventHandlers
             return Task.CompletedTask;
         }
 
-        public async Task HandleAsync(SpotUpdated @event)
+        public Task HandleAsync(MarkSpotAsUnoccupied @event)
         {
-            var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(@event.SpotId);
-            _database.Spot.Update(_mapper.Map<Spot>(spot));
+            var spot = _database.Spot.First(l => l.SpotId == @event.SpotId);
+            spot.UserId = null;
+
+            _database.Spot.Update(spot);
             _database.SaveChanges();
+
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(OwnerAssignedToSpot @event)
+        {
+            var spot = _database.Spot.First(l => l.SpotId == @event.SpotId);
+            spot.UserId = @event.OwnerId;
+
+            _database.Spot.Update(spot);
+            _database.SaveChanges();
+
+            return Task.CompletedTask;
+        }
+
+        public Task HandleAsync(PropertyChanged<SpotAggregate> @event)
+        {
+            var spot = _database.Spot.First(l => l.SpotId == @event.AggregateId);
+            typeof(Spot).GetProperty(@event.PropertyName).SetValue(spot, @event.NewValue);
+            _database.Spot.Update(spot);
+            _database.SaveChanges();
+
+            return Task.CompletedTask;
         }
     }
 }

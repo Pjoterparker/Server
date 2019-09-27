@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using PjoterParker.Api.Database.Entities;
-using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Database;
 using PjoterParker.Domain.Locations;
@@ -11,34 +10,30 @@ namespace PjoterParker.EventHandlers
 {
     public class LocationHandler :
         IEventHandlerAsync<LocationCreated>,
-        IEventHandlerAsync<LocationUpdated>
+        IEventHandlerAsync<PropertyChanged<LocationAggregate>>
     {
-        private readonly IAggregateStore _aggregateStore;
-
         private readonly IApiDatabaseContext _database;
 
-        private readonly IMapper _mapper;
-
-        public LocationHandler(IApiDatabaseContext database, IAggregateStore repository, IMapper mapper)
+        public LocationHandler(IApiDatabaseContext database)
         {
             _database = database;
-            _aggregateStore = repository;
-            _mapper = mapper;
         }
 
         public Task HandleAsync(LocationCreated @event)
         {
             _database.Location.Add(new Location(@event));
             _database.SaveChanges();
-
             return Task.CompletedTask;
         }
 
-        public async Task HandleAsync(LocationUpdated @event)
+        public Task HandleAsync(PropertyChanged<LocationAggregate> @event)
         {
-            var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(@event.LocationId);
-            _database.Location.Update(_mapper.Map<Location>(location));
+            var location = _database.Location.First(l => l.LocationId == @event.AggregateId);
+            typeof(Location).GetProperty(@event.PropertyName).SetValue(location, @event.NewValue);
+            _database.Location.Update(location);
             _database.SaveChanges();
+
+            return Task.CompletedTask;
         }
     }
 }

@@ -18,8 +18,11 @@ namespace PjoterParker.Application
 
         public bool IsUnique(Guid aggrageteId, string key, string value)
         {
-            var isUnique = !_context.UniquenessTable.Any(u => u.Key == key && u.Value == value);
-            if (isUnique)
+            var uniqueAggragete = _context.UniquenessTable
+                .Where(u => u.Key == key && u.Value == value)
+                .FirstOrDefault();
+
+            if (uniqueAggragete.IsNull())
             {
                 var result = _context.UniquenessTable.FirstOrDefault(u => u.Key == key && u.AggrageteId == aggrageteId);
                 if (result.IsNull())
@@ -36,7 +39,7 @@ namespace PjoterParker.Application
                 return true;
             }
 
-            return false;
+            return aggrageteId == uniqueAggragete.AggrageteId;
         }
 
         public bool Remove(Guid aggrageteId, string key, string value)

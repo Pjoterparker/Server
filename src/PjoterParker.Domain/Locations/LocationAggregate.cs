@@ -2,13 +2,15 @@
 using System.Linq;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Core.Events;
 using PjoterParker.Core.Extensions;
 using PjoterParker.Events;
 
 namespace PjoterParker.Domain.Locations
 {
     public class LocationAggregate : AggregateRoot<LocationAggregate>,
-      IApply<LocationCreated>
+      IApply<LocationCreated>,
+      IApply<PropertyChanged<LocationAggregate>>
     {
         public LocationAggregate()
         {

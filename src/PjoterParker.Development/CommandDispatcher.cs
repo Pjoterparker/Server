@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
+using PjoterParker.Database;
 
 namespace PjoterParker.Core.Commands
 {
@@ -17,6 +19,8 @@ namespace PjoterParker.Core.Commands
 
         private readonly IEventDispatcher _eventDispatcher;
 
+        private readonly IApiDatabaseContext _apiDatabaseContext;
+
         private readonly IEventFactory _eventFactory;
 
         public CommandDispatcher(
@@ -24,13 +28,15 @@ namespace PjoterParker.Core.Commands
             ICommandFactory commandFactory,
             IEventFactory eventFactory,
             IAggregateStore aggregateStore,
-            IEventDispatcher eventDispatcher)
+            IEventDispatcher eventDispatcher,
+            IApiDatabaseContext apiDatabaseContext)
         {
             _context = context;
             _commandFactory = commandFactory;
             _eventFactory = eventFactory;
             _aggregateStore = aggregateStore;
             _eventDispatcher = eventDispatcher;
+            _apiDatabaseContext = apiDatabaseContext;
         }
 
         public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Commands;
 using PjoterParker.Domain.Locations;
+using PjoterParker.Domain.Spots;
 
 namespace PjoterParker.Api.Controllers
 {
@@ -24,7 +25,7 @@ namespace PjoterParker.Api.Controllers
         }
 
         [HttpPut]
-        public async Task UpdateLocation(UpdateLocation.Command value)
+        public async Task UpdateLocation(UpdateSpot.Command value)
         {
             await _commandDispatcher.DispatchAsync(value);
         }

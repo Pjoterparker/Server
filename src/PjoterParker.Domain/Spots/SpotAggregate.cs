@@ -2,6 +2,7 @@
 using System.Linq;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Core.Events;
 using PjoterParker.Core.Extensions;
 using PjoterParker.Domain.Spots;
 using PjoterParker.Events;
@@ -11,7 +12,8 @@ namespace PjoterParker.Domain.Locations
     public class SpotAggregate : AggregateRoot<SpotAggregate>,
     IApply<SpotCreated>,
     IApply<OwnerAssignedToSpot>,
-    IApply<MarkSpotAsUnoccupied>
+    IApply<MarkSpotAsUnoccupied>,
+    IApply<PropertyChanged<SpotAggregate>>
     {
         public SpotAggregate()
         {

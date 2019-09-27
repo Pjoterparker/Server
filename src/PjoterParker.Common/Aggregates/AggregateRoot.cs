@@ -7,17 +7,24 @@ using Newtonsoft.Json;
 using PjoterParker.Common.Helpers;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
+using PjoterParker.Core.Extensions;
 
 namespace PjoterParker.Core.Aggregates
 {
     public class AggregateRoot<TAggregate> : IAggregateRoot
-        where TAggregate : AggregateRoot<TAggregate>
+        where TAggregate : AggregateRoot<TAggregate>,
+        IApply<PropertyChanged<TAggregate>>
     {
         private readonly List<EventComposite> _events = new List<EventComposite>();
 
         protected Dictionary<string, Action<TAggregate, IEvent>> _applyMethods = new Dictionary<string, Action<TAggregate, IEvent>>();
 
         protected Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>> _specifications = new Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>>();
+
+        public AggregateRoot()
+        {
+            _applyMethods.AddMethod<TAggregate, PropertyChanged<TAggregate>>();
+        }
 
         [JsonIgnore]
         public IComponentContext Context { get; set; }
@@ -32,6 +39,15 @@ namespace PjoterParker.Core.Aggregates
         public void Apply(PropertyChanged<TAggregate> @event)
         {
             GetType().GetProperty(@event.PropertyName).SetValue(this, @event.NewValue);
+        }
+
+        public void Apply(IEvent @event)
+        {
+            string eventName = @event.GetType().Name;
+            if (_applyMethods.ContainsKey(eventName))
+            {
+                _applyMethods[eventName](this as TAggregate, @event);
+            }
         }
 
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent

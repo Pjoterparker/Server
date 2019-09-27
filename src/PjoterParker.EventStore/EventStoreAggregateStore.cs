@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
 using StackExchange.Redis;
 
@@ -76,7 +77,7 @@ namespace PjoterParker.Core.EventStore
                 foreach (var evnt in currentSlice.Events)
                 {
                     var realEvent = DeserializeEvent(evnt.OriginalEvent.Metadata, evnt.OriginalEvent.Data);
-                    ((dynamic)aggregate).Apply((dynamic)realEvent);
+                    aggregate.Apply(realEvent as IEvent);
                     aggregate.Version++;
                 }
             }
