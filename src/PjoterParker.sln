@@ -23,7 +23,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.EventHandlers", "PjoterParker.EventHandlers\PjoterParker.EventHandlers.csproj", "{64FE9E0B-7EBB-4993-B3E4-8A40F04BBC74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.Tests", "PjoterParker.Tests\PjoterParker.Tests.csproj", "{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Tests", "PjoterParker.Tests\PjoterParker.Tests.csproj", "{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParker.DatabaseStore", "PjoterParker.DatabaseStore\PjoterParker.DatabaseStore.csproj", "{48FF611E-12DE-4838-A959-4A94896B1E6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48FF611E-12DE-4838-A959-4A94896B1E6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48FF611E-12DE-4838-A959-4A94896B1E6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48FF611E-12DE-4838-A959-4A94896B1E6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48FF611E-12DE-4838-A959-4A94896B1E6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
