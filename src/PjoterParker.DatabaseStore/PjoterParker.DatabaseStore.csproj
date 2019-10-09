@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PjoterParker.Api.Database\PjoterParker.Api.Database.csproj" />
+    <ProjectReference Include="..\PjoterParker.Domain\PjoterParker.Domain.csproj" />
   </ItemGroup>
 
 </Project>
