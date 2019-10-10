@@ -94,7 +94,7 @@ namespace PjoterParker.Core.EventStore
             return model;
         }
 
-        public async Task SaveAsync(IAggregateRoot aggregate)
+        public async Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot
         {
             var streamName = $"{aggregate.GetType().Name}:{aggregate.Id}";
             var newEvents = aggregate.Events;
@@ -104,6 +104,9 @@ namespace PjoterParker.Core.EventStore
 
             aggregate.Version += aggregate.Events.Count();
             await _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
+
+            var dbStore = _context.Resolve(typeof(IAggregateStore<>).MakeGenericType(aggregate.GetType())) as IAggregateStore<TAggregate>;
+            await dbStore.SaveAsync(aggregate);
         }
 
         private object DeserializeEvent(byte[] metadata, byte[] data)

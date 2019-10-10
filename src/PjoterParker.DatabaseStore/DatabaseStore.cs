@@ -1,24 +1,28 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using PjoterParker.Api.Database.Entities;
+using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Extensions;
 using PjoterParker.Database;
 using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.DatabaseStore
 {
-    public class DatabaseStore
+    public class DatabaseAggregateStore :
+        IAggregateStore<LocationAggregate>,
+        IAggregateStore<SpotAggregate>
     {
         private readonly IApiDatabaseContext _dbContext;
         private readonly IMapper _mapper;
 
-        public DatabaseStore(IApiDatabaseContext dbContext, IMapper mapper)
+        public DatabaseAggregateStore(IApiDatabaseContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
         }
 
-        public void Map(LocationAggregate locationAggregate)
+        public Task SaveAsync(LocationAggregate locationAggregate)
         {
             var location = _dbContext.Location.FirstOrDefault(l => l.LocationId == locationAggregate.Id);
             if (location.IsNull())
@@ -33,9 +37,10 @@ namespace PjoterParker.DatabaseStore
             }
 
             _dbContext.SaveChanges();
+            return Task.CompletedTask;
         }
 
-        public void Map(SpotAggregate spotAggregate)
+        public Task SaveAsync(SpotAggregate spotAggregate)
         {
             var spot = _dbContext.Spot.FirstOrDefault(l => l.LocationId == spotAggregate.Id);
             if (spot.IsNull())
@@ -50,6 +55,7 @@ namespace PjoterParker.DatabaseStore
             }
 
             _dbContext.SaveChanges();
+            return Task.CompletedTask;
         }
     }
 }

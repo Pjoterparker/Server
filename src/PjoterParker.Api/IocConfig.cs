@@ -26,8 +26,8 @@ using PjoterParker.Core.EventStore;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
 using PjoterParker.Database;
+using PjoterParker.DatabaseStore;
 using PjoterParker.Development;
-using PjoterParker.EventHandlers;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Redis;
@@ -81,7 +81,7 @@ namespace PjoterParker.Api
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
             var domainAssembly = typeof(CreateLocation).GetTypeInfo().Assembly;
-            var eventHandlersAssembly = typeof(LocationHandler).GetTypeInfo().Assembly;
+            var dbStoreAssembly = typeof(DatabaseAggregateStore).GetTypeInfo().Assembly;
 
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -147,7 +147,7 @@ namespace PjoterParker.Api
 
             builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(eventHandlersAssembly).AsClosedTypesOf(typeof(IEventHandlerAsync<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(dbStoreAssembly).AsClosedTypesOf(typeof(IAggregateStore<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
             builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();
