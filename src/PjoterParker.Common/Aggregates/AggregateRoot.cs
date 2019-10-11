@@ -8,6 +8,7 @@ using PjoterParker.Common.Helpers;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Extensions;
+using PjoterParker.Core.Specification;
 
 namespace PjoterParker.Core.Aggregates
 {
@@ -23,7 +24,7 @@ namespace PjoterParker.Core.Aggregates
 
         public AggregateRoot()
         {
-            _applyMethods.AddMethod<TAggregate, PropertyChanged<TAggregate>>();
+            _applyMethods.AddMethod<TAggregate,PropertyChanged<TAggregate>>();
         }
 
         [JsonIgnore]
@@ -112,6 +113,11 @@ namespace PjoterParker.Core.Aggregates
             }
 
             return false;
+        }
+
+        public  void AddSpecificationsMethod<TEvent>()  where TEvent : class, IEvent
+        {
+            _specifications.Add(typeof(TEvent).Name, (context, @event) => { return context.Resolve<ISpecificationFor<TAggregate, TEvent>>().Apply(@event as TEvent); });
         }
     }
 }

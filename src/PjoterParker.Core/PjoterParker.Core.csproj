@@ -15,4 +15,9 @@
     <PackageReference Include="FluentValidation" Version="8.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\" />
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

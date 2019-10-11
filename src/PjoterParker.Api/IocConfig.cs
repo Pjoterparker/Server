@@ -12,13 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Api.Credentials;
 using PjoterParker.Api.Database;
-using PjoterParker.Application;
 using PjoterParker.Common;
 using PjoterParker.Common.Commands;
 using PjoterParker.Common.Credentials;
 using PjoterParker.Common.Events;
 using PjoterParker.Core.Aggregates;
-using PjoterParker.Core.Application;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Credentials;
 using PjoterParker.Core.Events;
@@ -147,7 +145,7 @@ namespace PjoterParker.Api
 
             builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(dbStoreAssembly).AsClosedTypesOf(typeof(IAggregateStore<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(dbStoreAssembly).AsClosedTypesOf(typeof(IAggregateMap<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
             builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();
@@ -160,12 +158,11 @@ namespace PjoterParker.Api
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(AppAbstractValidation<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<ApiDatabaseContext>().As<IApiDatabaseContext>().InstancePerLifetimeScope();
-            builder.RegisterType<ApiDatabaseContext>().As<IUniquenessContext>().InstancePerLifetimeScope();
 
-            builder.RegisterType<UniquenessService>().As<IUniquenessService>().InstancePerLifetimeScope();
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<DatabaseAggregateStore>().As<IAggregateDbStore>().InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 

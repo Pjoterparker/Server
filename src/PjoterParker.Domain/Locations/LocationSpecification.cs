@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using PjoterParker.Core.Application;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
 using PjoterParker.Database;
@@ -14,12 +13,9 @@ namespace PjoterParker.Domain.Locations
     {
         private readonly IApiDatabaseContext _database;
 
-        private readonly IUniquenessService _uniquenessService;
-
-        public LocationSpecification(IApiDatabaseContext database, IUniquenessService uniquenessService)
+        public LocationSpecification(IApiDatabaseContext database)
         {
             _database = database;
-            _uniquenessService = uniquenessService;
         }
 
         public IValidator<LocationAggregate> Apply(LocationCreated @event)
@@ -72,12 +68,12 @@ namespace PjoterParker.Domain.Locations
         {
             RuleFor(x => x).Custom((aggregate, context) =>
             {
-                var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "locationName", aggregate.Name);
+                //var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "locationName", aggregate.Name);
 
-                if (!doesNameIsUnique)
-                {
-                    context.AddFailure(nameof(aggregate.Name), "Location with that Name already exists");
-                }
+                //if (!doesNameIsUnique)
+                //{
+                //    context.AddFailure(nameof(aggregate.Name), "Location with that Name already exists");
+                //}
             });
         }
     }

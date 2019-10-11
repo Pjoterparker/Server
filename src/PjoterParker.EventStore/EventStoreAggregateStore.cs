@@ -24,13 +24,20 @@ namespace PjoterParker.Core.EventStore
 
         private readonly IComponentContext _context;
 
+        private readonly IAggregateDbStore _dbStore;
+
         private readonly IEventStoreConnection _eventStore;
 
-        public EventStoreAggregateStore(IEventStoreConnection eventStore, IDatabase cache, IComponentContext context)
+        public EventStoreAggregateStore(
+            IEventStoreConnection eventStore,
+            IDatabase cache,
+            IComponentContext context,
+            IAggregateDbStore dbStore)
         {
             _eventStore = eventStore;
             _cache = cache;
             _context = context;
+            _dbStore = dbStore;
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId) where TAggregate : IAggregateRoot, new()
@@ -105,8 +112,7 @@ namespace PjoterParker.Core.EventStore
             aggregate.Version += aggregate.Events.Count();
             await _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
 
-            var dbStore = _context.Resolve(typeof(IAggregateStore<>).MakeGenericType(aggregate.GetType())) as IAggregateStore<TAggregate>;
-            await dbStore.SaveAsync(aggregate);
+            await _dbStore.SaveAsync(aggregate);
         }
 
         private object DeserializeEvent(byte[] metadata, byte[] data)

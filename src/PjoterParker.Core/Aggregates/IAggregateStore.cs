@@ -13,9 +13,4 @@ namespace PjoterParker.Core.Aggregates
 
         Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot;
     }
-
-    public interface IAggregateStore<TAggregate> where TAggregate : IAggregateRoot
-    {
-        Task SaveAsync(TAggregate aggregate);
-    }
 }

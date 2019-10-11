@@ -3,7 +3,6 @@ using System.Linq;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
-using PjoterParker.Core.Extensions;
 using PjoterParker.Domain.Spots;
 using PjoterParker.Events;
 
@@ -17,12 +16,12 @@ namespace PjoterParker.Domain.Locations
     {
         public SpotAggregate()
         {
-            _applyMethods.AddMethod<SpotAggregate, SpotCreated>();
-            _applyMethods.AddMethod<SpotAggregate, OwnerAssignedToSpot>();
-            _applyMethods.AddMethod<SpotAggregate, MarkSpotAsUnoccupied>();
+            //AddApplyMethod<SpotCreated>();
+            //AddApplyMethod<OwnerAssignedToSpot>();
+            //AddApplyMethod<MarkSpotAsUnoccupied>();
 
-            _specifications.AddMethod<SpotAggregate, SpotCreated>();
-            _specifications.AddMethod<SpotAggregate, SpotUpdated>();
+            AddSpecificationsMethod<SpotCreated>();
+            AddSpecificationsMethod<SpotUpdated>();
         }
 
         public Guid LocationId { get; set; }
