@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 using PjoterParker.Common.Helpers;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
-using PjoterParker.Core.Extensions;
 using PjoterParker.Core.Specification;
 
 namespace PjoterParker.Core.Aggregates
@@ -17,15 +16,6 @@ namespace PjoterParker.Core.Aggregates
         IApply<PropertyChanged<TAggregate>>
     {
         private readonly List<EventComposite> _events = new List<EventComposite>();
-
-        protected Dictionary<string, Action<TAggregate, IEvent>> _applyMethods = new Dictionary<string, Action<TAggregate, IEvent>>();
-
-        protected Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>> _specifications = new Dictionary<string, Func<IComponentContext, IEvent, IValidator<TAggregate>>>();
-
-        public AggregateRoot()
-        {
-            _applyMethods.AddMethod<TAggregate,PropertyChanged<TAggregate>>();
-        }
 
         [JsonIgnore]
         public IComponentContext Context { get; set; }
@@ -44,25 +34,23 @@ namespace PjoterParker.Core.Aggregates
 
         public void Apply(IEvent @event)
         {
-            string eventName = @event.GetType().Name;
-            if (_applyMethods.ContainsKey(eventName))
-            {
-                _applyMethods[eventName](this as TAggregate, @event);
-            }
+            //string eventName = @event.GetType().Name;
+            //if (this is IApply<TEvent>)
+            //{
+            //    (this as IApply<TEvent>).Apply(@event);
+            //}
         }
 
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
-            string eventName = @event.GetType().Name;
-
-            if (_applyMethods.ContainsKey(eventName))
+            if (this is IApply<TEvent>)
             {
-                _applyMethods[eventName](this as TAggregate, @event);
+                (this as IApply<TEvent>).Apply(@event);
             }
 
-            if (_specifications.ContainsKey(eventName))
+            if (Context.TryResolve(out ISpecificationFor<TAggregate, TEvent> specificationFor))
             {
-                var validator = _specifications[eventName](Context, @event);
+                var validator = specificationFor.Apply(@event);
                 ValidationResult result = validator.Validate(this);
                 if (!result.IsValid)
                 {
@@ -113,11 +101,6 @@ namespace PjoterParker.Core.Aggregates
             }
 
             return false;
-        }
-
-        public  void AddSpecificationsMethod<TEvent>()  where TEvent : class, IEvent
-        {
-            _specifications.Add(typeof(TEvent).Name, (context, @event) => { return context.Resolve<ISpecificationFor<TAggregate, TEvent>>().Apply(@event as TEvent); });
         }
     }
 }

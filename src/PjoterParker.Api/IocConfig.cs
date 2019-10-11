@@ -166,7 +166,7 @@ namespace PjoterParker.Api
 
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(domainAssembly)
+            builder.RegisterAssemblyTypes(dbStoreAssembly)
             .Where(t => typeof(Profile).IsAssignableFrom(t) && !t.IsAbstract && t.IsPublic)
             .As<Profile>().SingleInstance();
 

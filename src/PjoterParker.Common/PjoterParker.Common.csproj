@@ -13,4 +13,8 @@
     <ProjectReference Include="..\PjoterParker.Core\PjoterParker.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Database\" />
+  </ItemGroup>
+
 </Project>

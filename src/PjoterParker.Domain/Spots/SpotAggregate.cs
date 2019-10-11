@@ -16,12 +16,7 @@ namespace PjoterParker.Domain.Locations
     {
         public SpotAggregate()
         {
-            //AddApplyMethod<SpotCreated>();
-            //AddApplyMethod<OwnerAssignedToSpot>();
-            //AddApplyMethod<MarkSpotAsUnoccupied>();
 
-            AddSpecificationsMethod<SpotCreated>();
-            AddSpecificationsMethod<SpotUpdated>();
         }
 
         public Guid LocationId { get; set; }

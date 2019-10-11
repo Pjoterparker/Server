@@ -35,7 +35,7 @@ namespace PjoterParker.DatabaseStore
 
         public void AddStoreMethod<TAggregate>() where TAggregate : class, IAggregateRoot
         {
-            _storeMethods.Add(typeof(TAggregate).Name, (context, aggregate) => { _context.Resolve<IAggregateMap<TAggregate>>().Save(aggregate as TAggregate); });
+            _storeMethods.Add(typeof(TAggregate).Name, (context, aggregate) => { context.Resolve<IAggregateMap<TAggregate>>().Save(aggregate as TAggregate); });
         }
 
         public void Save(LocationAggregate locationAggregate)

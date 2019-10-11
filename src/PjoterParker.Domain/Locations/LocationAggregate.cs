@@ -14,9 +14,7 @@ namespace PjoterParker.Domain.Locations
     {
         public LocationAggregate()
         {
-            _applyMethods.AddMethod<LocationAggregate, LocationCreated>();
-
-            AddSpecificationsMethod<LocationCreated>();
+           
         }
 
         public string City { get; set; }
