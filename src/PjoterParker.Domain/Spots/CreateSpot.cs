@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
@@ -32,12 +33,17 @@ namespace PjoterParker.Api.Controllers.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public Task<IAggregateRoot> ExecuteAsync(Command command)
+            public Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
             {
-                var spot = _aggregateStore.GetNew<SpotAggregate>();
-                spot.Create(_guidService.New(), command);
-                return Task.FromResult<IAggregateRoot>(spot);
+                throw new NotImplementedException();
             }
+
+            //public Task<IAggregateRoot> ExecuteAsync(Command command)
+            //{
+            //    var spot = _aggregateStore.GetNew<SpotAggregate>();
+            //    spot.Create(_guidService.New(), command);
+            //    return Task.FromResult<IAggregateRoot>(spot);
+            //}
         }
 
         public class Validator : AppAbstractValidation<Command>

@@ -162,8 +162,7 @@ namespace PjoterParker.Api
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();
-            builder.RegisterType<DatabaseAggregateStore>().As<IAggregateDbStore>().InstancePerLifetimeScope();
-
+            
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(dbStoreAssembly)

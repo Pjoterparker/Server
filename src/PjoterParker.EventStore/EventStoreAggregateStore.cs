@@ -10,6 +10,7 @@ using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
+using Polly;
 using StackExchange.Redis;
 
 namespace PjoterParker.Core.EventStore
@@ -24,20 +25,16 @@ namespace PjoterParker.Core.EventStore
 
         private readonly IComponentContext _context;
 
-        private readonly IAggregateDbStore _dbStore;
-
         private readonly IEventStoreConnection _eventStore;
 
         public EventStoreAggregateStore(
             IEventStoreConnection eventStore,
             IDatabase cache,
-            IComponentContext context,
-            IAggregateDbStore dbStore)
+            IComponentContext context)
         {
             _eventStore = eventStore;
             _cache = cache;
             _context = context;
-            _dbStore = dbStore;
         }
 
         public async Task<TAggregate> GetByIdAsync<TAggregate>(Guid AggregateId) where TAggregate : IAggregateRoot, new()
@@ -101,18 +98,28 @@ namespace PjoterParker.Core.EventStore
             return model;
         }
 
-        public async Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot
+        public async Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : class, IAggregateRoot
         {
             var streamName = $"{aggregate.GetType().Name}:{aggregate.Id}";
             var newEvents = aggregate.Events;
             var eventsToSave = newEvents.Select(e => ToEventData(e)).ToList();
 
-            await _eventStore.AppendToStreamAsync(streamName, aggregate.Version, eventsToSave);
+            await Policy.Handle<Exception>().WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(2)).ExecuteAsync(() =>
+            {
+                return _eventStore.AppendToStreamAsync(streamName, aggregate.Version, eventsToSave);
+            });
 
             aggregate.Version += aggregate.Events.Count();
-            await _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
+            await Policy.Handle<Exception>().RetryAsync().ExecuteAsync(() =>
+            {
+                return _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
+            });
 
-            await _dbStore.SaveAsync(aggregate);
+            var dbHandler = _context.Resolve<IAggregateMap<TAggregate>>();
+            Policy.Handle<Exception>().WaitAndRetry(5, retryAttempt => TimeSpan.FromSeconds(2)).Execute(() =>
+            {
+                dbHandler.Save(aggregate);
+            });
         }
 
         private object DeserializeEvent(byte[] metadata, byte[] data)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
@@ -28,12 +29,17 @@ namespace PjoterParker.Domain.Spots
                 _aggregateStore = aggregateStore;
             }
 
-            public async Task<IAggregateRoot> ExecuteAsync(Command command)
+            public Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
             {
-                var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);
-                spot.Update(command);
-                return spot;
+                throw new NotImplementedException();
             }
+
+            //public async Task<IAggregateRoot> ExecuteAsync(Command command)
+            //{
+            //    var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);
+            //    spot.Update(command);
+            //    return spot;
+            //}
         }
 
         public class Validator : AppAbstractValidation<Command>

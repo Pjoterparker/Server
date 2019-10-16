@@ -66,14 +66,13 @@ namespace PjoterParker.Domain.Locations
 
         public void MustHaveUniqueName()
         {
-            RuleFor(x => x).Custom((aggregate, context) =>
+            RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
             {
-                //var doesNameIsUnique = _uniquenessService.IsUnique(aggregate.Id, "locationName", aggregate.Name);
-
-                //if (!doesNameIsUnique)
-                //{
-                //    context.AddFailure(nameof(aggregate.Name), "Location with that Name already exists");
-                //}
+                var exists = await _database.Location.AnyAsync(location => location.Name == aggregate.Name, token);
+                if (exists)
+                {
+                    context.AddFailure(nameof(aggregate.Name), "Location with that name already exists");
+                }
             });
         }
     }

@@ -11,6 +11,6 @@ namespace PjoterParker.Core.Aggregates
 
         TAggregate GetNew<TAggregate>() where TAggregate : IAggregateRoot, new();
 
-        Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot;
+        Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : class, IAggregateRoot;
     }
 }

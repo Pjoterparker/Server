@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Core.Events;
 
 namespace PjoterParker.Core.Commands
 {
     public interface ICommandHandlerAsync<in TCommand> where TCommand : ICommand
     {
-        Task<IAggregateRoot> ExecuteAsync(TCommand command);
+        Task<IEnumerable<EventComposite>> ExecuteAsync(TCommand command);
     }
 }

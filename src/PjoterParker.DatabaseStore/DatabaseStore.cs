@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Autofac;
+﻿using System.Linq;
 using AutoMapper;
 using PjoterParker.Api.Database.Entities;
 using PjoterParker.Core.Aggregates;
@@ -14,28 +10,15 @@ namespace PjoterParker.DatabaseStore
 {
     public class DatabaseAggregateStore :
         IAggregateMap<LocationAggregate>,
-        IAggregateMap<SpotAggregate>,
-        IAggregateDbStore
+        IAggregateMap<SpotAggregate>
     {
         private readonly IApiDatabaseContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly IComponentContext _context;
 
-        private readonly Dictionary<string, Action<IComponentContext, IAggregateRoot>> _storeMethods = new Dictionary<string, Action<IComponentContext, IAggregateRoot>>();
-
-        public DatabaseAggregateStore(IApiDatabaseContext dbContext, IMapper mapper, IComponentContext context)
+        public DatabaseAggregateStore(IApiDatabaseContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
-            _context = context;
-
-            AddStoreMethod<LocationAggregate>();
-            AddStoreMethod<SpotAggregate>();
-        }
-
-        public void AddStoreMethod<TAggregate>() where TAggregate : class, IAggregateRoot
-        {
-            _storeMethods.Add(typeof(TAggregate).Name, (context, aggregate) => { context.Resolve<IAggregateMap<TAggregate>>().Save(aggregate as TAggregate); });
         }
 
         public void Save(LocationAggregate locationAggregate)
@@ -70,12 +53,6 @@ namespace PjoterParker.DatabaseStore
             }
 
             _dbContext.SaveChanges();
-        }
-
-        public Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot
-        {
-            (_storeMethods[aggregate.GetType().Name])(_context, aggregate);
-            return Task.CompletedTask;
         }
     }
 }

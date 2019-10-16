@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
@@ -31,11 +32,13 @@ namespace PjoterParker.Api.Controllers.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public Task<IAggregateRoot> ExecuteAsync(Command command)
+            public async Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
             {
                 var location = _aggregateStore.GetNew<LocationAggregate>();
                 location.Create(_guidService.New(), command);
-                return Task.FromResult<IAggregateRoot>(location);
+                await _aggregateStore.SaveAsync(location);
+
+                return location.Events;
             }
         }
 

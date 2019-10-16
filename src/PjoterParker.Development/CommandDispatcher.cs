@@ -1,25 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
-using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
-using PjoterParker.Database;
 
 namespace PjoterParker.Core.Commands
 {
     public class CommandDispatcher : ICommandDispatcher
     {
-        private readonly IAggregateStore _aggregateStore;
-
         private readonly ICommandFactory _commandFactory;
 
         private readonly IComponentContext _context;
 
         private readonly IEventDispatcher _eventDispatcher;
-
-        private readonly IApiDatabaseContext _apiDatabaseContext;
 
         private readonly IEventFactory _eventFactory;
 
@@ -27,16 +21,12 @@ namespace PjoterParker.Core.Commands
             IComponentContext context,
             ICommandFactory commandFactory,
             IEventFactory eventFactory,
-            IAggregateStore aggregateStore,
-            IEventDispatcher eventDispatcher,
-            IApiDatabaseContext apiDatabaseContext)
+            IEventDispatcher eventDispatcher)
         {
             _context = context;
             _commandFactory = commandFactory;
             _eventFactory = eventFactory;
-            _aggregateStore = aggregateStore;
             _eventDispatcher = eventDispatcher;
-            _apiDatabaseContext = apiDatabaseContext;
         }
 
         public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
@@ -53,12 +43,10 @@ namespace PjoterParker.Core.Commands
             }
 
             var handler = _context.Resolve<ICommandHandlerAsync<TCommand>>();
-            IAggregateRoot aggregate = await handler.ExecuteAsync(command).ConfigureAwait(false);
+            IEnumerable<EventComposite> events = await handler.ExecuteAsync(command).ConfigureAwait(false);
 
-            _eventFactory.Make(commandComposite, aggregate.Events);
-            await _aggregateStore.SaveAsync(aggregate);
-
-            foreach (var @event in aggregate.Events)
+            _eventFactory.Make(commandComposite, events);
+            foreach (var @event in events)
             {
                 await _eventDispatcher.DispatchAsync(@event.Event);
             }
