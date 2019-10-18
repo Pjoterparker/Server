@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Services;
 using PjoterParker.Core.Validation;
-using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Api.Controllers.Locations
 {
@@ -33,7 +31,7 @@ namespace PjoterParker.Api.Controllers.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
+            public Task<IAggregateRoot> ExecuteAsync(Command command)
             {
                 throw new NotImplementedException();
             }

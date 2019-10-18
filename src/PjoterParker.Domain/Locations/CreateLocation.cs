@@ -32,13 +32,11 @@ namespace PjoterParker.Api.Controllers.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public async Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
+            public Task<IAggregateRoot> ExecuteAsync(Command command)
             {
                 var location = _aggregateStore.GetNew<LocationAggregate>();
                 location.Create(_guidService.New(), command);
-                await _aggregateStore.SaveAsync(location);
-
-                return location.Events;
+                return Task.FromResult<IAggregateRoot>(location);
             }
         }
 

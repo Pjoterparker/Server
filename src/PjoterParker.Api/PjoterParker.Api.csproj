@@ -28,7 +28,6 @@
     <ProjectReference Include="..\PjoterParker.Application\PjoterParker.Application.csproj" />
     <ProjectReference Include="..\PjoterParker.Common\PjoterParker.Common.csproj" />
     <ProjectReference Include="..\PjoterParker.Core\PjoterParker.Core.csproj" />
-    <ProjectReference Include="..\PjoterParker.DatabaseStore\PjoterParker.DatabaseStore.csproj" />
     <ProjectReference Include="..\PjoterParker.Development\PjoterParker.Development.csproj" />
     <ProjectReference Include="..\PjoterParker.Domain\PjoterParker.Domain.csproj" />
     <ProjectReference Include="..\PjoterParker.EventHandlers\PjoterParker.EventHandlers.csproj" />

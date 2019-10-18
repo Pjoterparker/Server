@@ -34,6 +34,11 @@ namespace PjoterParker.Domain.Spots
                 throw new NotImplementedException();
             }
 
+            Task<IAggregateRoot> ICommandHandlerAsync<Command>.ExecuteAsync(Command command)
+            {
+                throw new NotImplementedException();
+            }
+
             //public async Task<IAggregateRoot> ExecuteAsync(Command command)
             //{
             //    var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);

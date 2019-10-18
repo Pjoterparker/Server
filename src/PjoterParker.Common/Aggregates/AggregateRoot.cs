@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using FluentValidation.Results;
@@ -11,7 +12,7 @@ using PjoterParker.Core.Specification;
 
 namespace PjoterParker.Core.Aggregates
 {
-    public class AggregateRoot<TAggregate> : IAggregateRoot
+    public abstract class AggregateRoot<TAggregate> : IAggregateRoot
         where TAggregate : AggregateRoot<TAggregate>,
         IApply<PropertyChanged<TAggregate>>
     {
@@ -34,11 +35,7 @@ namespace PjoterParker.Core.Aggregates
 
         public void Apply(IEvent @event)
         {
-            //string eventName = @event.GetType().Name;
-            //if (this is IApply<TEvent>)
-            //{
-            //    (this as IApply<TEvent>).Apply(@event);
-            //}
+            Version++;
         }
 
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
@@ -101,6 +98,11 @@ namespace PjoterParker.Core.Aggregates
             }
 
             return false;
+        }
+
+        public virtual async Task CommitAsync(IAggregateStore aggregateStore)
+        {
+            await aggregateStore.SaveAsync(this as TAggregate);
         }
     }
 }

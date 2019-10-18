@@ -10,7 +10,6 @@ using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
-using Polly;
 using StackExchange.Redis;
 
 namespace PjoterParker.Core.EventStore
@@ -30,7 +29,8 @@ namespace PjoterParker.Core.EventStore
         public EventStoreAggregateStore(
             IEventStoreConnection eventStore,
             IDatabase cache,
-            IComponentContext context)
+            IComponentContext context,
+            IEventFactory eventFactory)
         {
             _eventStore = eventStore;
             _cache = cache;
@@ -82,7 +82,6 @@ namespace PjoterParker.Core.EventStore
                 {
                     var realEvent = DeserializeEvent(evnt.OriginalEvent.Metadata, evnt.OriginalEvent.Data);
                     aggregate.Apply(realEvent as IEvent);
-                    aggregate.Version++;
                 }
             }
             while (version >= currentSlice.NextEventNumber && !currentSlice.IsEndOfStream);
@@ -104,22 +103,13 @@ namespace PjoterParker.Core.EventStore
             var newEvents = aggregate.Events;
             var eventsToSave = newEvents.Select(e => ToEventData(e)).ToList();
 
-            await Policy.Handle<Exception>().WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(2)).ExecuteAsync(() =>
-            {
-                return _eventStore.AppendToStreamAsync(streamName, aggregate.Version, eventsToSave);
-            });
+            await _eventStore.AppendToStreamAsync(streamName, aggregate.Version, eventsToSave);
 
             aggregate.Version += aggregate.Events.Count();
-            await Policy.Handle<Exception>().RetryAsync().ExecuteAsync(() =>
-            {
-                return _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
-            });
+            await _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
 
             var dbHandler = _context.Resolve<IAggregateMap<TAggregate>>();
-            Policy.Handle<Exception>().WaitAndRetry(5, retryAttempt => TimeSpan.FromSeconds(2)).Execute(() =>
-            {
-                dbHandler.Save(aggregate);
-            });
+            dbHandler.Save(aggregate);
         }
 
         private object DeserializeEvent(byte[] metadata, byte[] data)
@@ -132,9 +122,8 @@ namespace PjoterParker.Core.EventStore
         {
             var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event.Event));
             var metadata = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event.Metadata));
-            var typeName = @event.GetType().Name;
 
-            return new EventData(@event.Metadata.EventId, typeName, true, data, metadata);
+            return new EventData(@event.Metadata.EventId, @event.Metadata.EventType, true, data, metadata);
         }
     }
 }

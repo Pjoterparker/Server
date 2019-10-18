@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
+using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
 
@@ -15,18 +16,22 @@ namespace PjoterParker.Core.Commands
 
         private readonly IEventDispatcher _eventDispatcher;
 
+        private readonly IAggregateStore _aggregateStore;
+
         private readonly IEventFactory _eventFactory;
 
         public CommandDispatcher(
             IComponentContext context,
             ICommandFactory commandFactory,
             IEventFactory eventFactory,
-            IEventDispatcher eventDispatcher)
+            IEventDispatcher eventDispatcher,
+            IAggregateStore aggregateStore)
         {
             _context = context;
             _commandFactory = commandFactory;
             _eventFactory = eventFactory;
             _eventDispatcher = eventDispatcher;
+            _aggregateStore = aggregateStore;
         }
 
         public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
@@ -43,10 +48,11 @@ namespace PjoterParker.Core.Commands
             }
 
             var handler = _context.Resolve<ICommandHandlerAsync<TCommand>>();
-            IEnumerable<EventComposite> events = await handler.ExecuteAsync(command).ConfigureAwait(false);
+            IAggregateRoot aggregateRoot = await handler.ExecuteAsync(command); 
 
-            _eventFactory.Make(commandComposite, events);
-            foreach (var @event in events)
+            _eventFactory.Make(commandComposite, aggregateRoot.Events);
+            await aggregateRoot.CommitAsync(_aggregateStore);
+            foreach (var @event in aggregateRoot.Events)
             {
                 await _eventDispatcher.DispatchAsync(@event.Event);
             }

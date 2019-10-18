@@ -7,6 +7,6 @@ namespace PjoterParker.Core.Aggregates
 {
     public interface IAggregateDbStore
     {
-        Task SaveAsync<TAggregate>(TAggregate aggregate) where TAggregate : IAggregateRoot;
+        Task SaveAsync(IAggregateRoot aggregate);
     }
 }

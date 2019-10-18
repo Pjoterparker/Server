@@ -7,6 +7,6 @@ namespace PjoterParker.Core.Commands
 {
     public interface ICommandHandlerAsync<in TCommand> where TCommand : ICommand
     {
-        Task<IEnumerable<EventComposite>> ExecuteAsync(TCommand command);
+        Task<IAggregateRoot> ExecuteAsync(TCommand command);
     }
 }

@@ -30,11 +30,17 @@ namespace PjoterParker.Domain.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public async Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
+            public Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
             {
-                var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
-                location.Update(command);
-                return location.Events;
+                //var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
+                //location.Update(command);
+                //return location.Events;
+                return null;
+            }
+
+            Task<IAggregateRoot> ICommandHandlerAsync<Command>.ExecuteAsync(Command command)
+            {
+                throw new NotImplementedException();
             }
         }
 

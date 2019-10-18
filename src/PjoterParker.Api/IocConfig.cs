@@ -145,7 +145,7 @@ namespace PjoterParker.Api
 
             builder.RegisterType<EventDispatcher>().As<IEventDispatcher>().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
-            builder.RegisterAssemblyTypes(dbStoreAssembly).AsClosedTypesOf(typeof(IAggregateMap<>)).InstancePerLifetimeScope();
+            builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IAggregateMap<>)).InstancePerLifetimeScope();
 
             builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
             builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();

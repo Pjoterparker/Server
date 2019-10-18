@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using PjoterParker.Core.Commands;
 
 namespace PjoterParker.Core.Aggregates
 {
