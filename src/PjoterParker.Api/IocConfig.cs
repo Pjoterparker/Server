@@ -79,8 +79,7 @@ namespace PjoterParker.Api
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
             var domainAssembly = typeof(CreateLocation).GetTypeInfo().Assembly;
-            var dbStoreAssembly = typeof(DatabaseAggregateStore).GetTypeInfo().Assembly;
-
+            
             var builder = new ContainerBuilder();
             builder.Populate(services);
             RegisterCredentials(builder);
@@ -165,7 +164,7 @@ namespace PjoterParker.Api
             
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 
-            builder.RegisterAssemblyTypes(dbStoreAssembly)
+            builder.RegisterAssemblyTypes(domainAssembly)
             .Where(t => typeof(Profile).IsAssignableFrom(t) && !t.IsAbstract && t.IsPublic)
             .As<Profile>().SingleInstance();
 

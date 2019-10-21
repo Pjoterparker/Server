@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using AutoMapper;
 using PjoterParker.Api.Database.Entities;
+using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Extensions;
 using PjoterParker.Database;
 
 namespace PjoterParker.Domain.Locations
 {
-    public class LocationToTable
+    public class LocationToDb : IAggregateMap<LocationAggregate>
     {
         private readonly IApiDatabaseContext _dbContext;
         private readonly IMapper _mapper;
 
-        public LocationToTable(IApiDatabaseContext dbContext, IMapper mapper)
+        public LocationToDb(IApiDatabaseContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
