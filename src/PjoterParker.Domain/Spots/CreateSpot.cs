@@ -5,6 +5,7 @@ using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Services;
 using PjoterParker.Core.Validation;
+using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Api.Controllers.Locations
 {
@@ -33,15 +34,10 @@ namespace PjoterParker.Api.Controllers.Locations
 
             public Task<IAggregateRoot> ExecuteAsync(Command command)
             {
-                throw new NotImplementedException();
+                var spot = _aggregateStore.GetNew<SpotAggregate>();
+                spot.Create(_guidService.New(), command);
+                return Task.FromResult<IAggregateRoot>(spot);
             }
-
-            //public Task<IAggregateRoot> ExecuteAsync(Command command)
-            //{
-            //    var spot = _aggregateStore.GetNew<SpotAggregate>();
-            //    spot.Create(_guidService.New(), command);
-            //    return Task.FromResult<IAggregateRoot>(spot);
-            //}
         }
 
         public class Validator : AppAbstractValidation<Command>

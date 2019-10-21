@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Commands;
@@ -18,15 +19,29 @@ namespace PjoterParker.Api.Controllers
         }
 
         [HttpPost]
-        public async Task CreateSpot(CreateLocation.Command value)
+        public async Task CreateLocation(CreateLocation.Command value)
         {
             await _commandDispatcher.DispatchAsync(value);
         }
 
         [HttpPut]
-        public async Task UpdateSpot(UpdateLocation.Command value)
+        public async Task UpdateLocation(UpdateLocation.Command value)
         {
             await _commandDispatcher.DispatchAsync(value);
+        }
+
+        [HttpPost]
+        [Route("{locationId}/Enable")]
+        public async Task Enable(Guid locationId)
+        {
+            await _commandDispatcher.DispatchAsync(new EnableLocation.Command(locationId));
+        }
+
+        [HttpPost]
+        [Route("{locationId}/Disable")]
+        public async Task Disable(Guid locationId)
+        {
+            await _commandDispatcher.DispatchAsync(new DisableLocation.Command(locationId));
         }
     }
 }

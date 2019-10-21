@@ -28,5 +28,7 @@ namespace PjoterParker.Api.Database.Entities
         public virtual ICollection<Spot> Spots { get; set; } = new HashSet<Spot>();
 
         public string Street { get; set; }
+
+        public bool IsDisabled { get; set; }
     }
 }

@@ -33,6 +33,7 @@ namespace PjoterParker.Domain.Locations
             MusHaveCity();
             MusHaveStreet();
             MustHaveExistingId();
+            MustBeNotDisabled();
             MustHaveUniqueName();
             return this;
         }
@@ -50,6 +51,19 @@ namespace PjoterParker.Domain.Locations
         public void MusHaveStreet()
         {
             RuleFor(x => x.Street).NotEmpty().MaximumLength(255);
+        }
+
+        public void MustBeNotDisabled()
+        {
+            RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
+            {
+                var exists = await _database.Location
+                .AnyAsync(location => location.LocationId == aggregate.Id && location.IsDisabled, token);
+                if (exists)
+                {
+                    context.AddFailure(nameof(aggregate.Id), "Location is disabled");
+                }
+            });
         }
 
         public void MustHaveExistingId()
