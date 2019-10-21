@@ -33,11 +33,6 @@ namespace PjoterParker.Core.Aggregates
             GetType().GetProperty(@event.PropertyName).SetValue(this, @event.NewValue);
         }
 
-        public void Apply(IEvent @event)
-        {
-            Version++;
-        }
-
         protected void AddEvent<TEvent>(TEvent @event) where TEvent : IEvent
         {
             if (this is IApply<TEvent>)

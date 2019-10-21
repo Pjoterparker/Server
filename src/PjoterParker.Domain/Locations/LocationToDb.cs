@@ -1,21 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using AutoMapper;
 using PjoterParker.Api.Database.Entities;
-using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Extensions;
 using PjoterParker.Database;
-using PjoterParker.Domain.Locations;
 
-namespace PjoterParker.DatabaseStore
+namespace PjoterParker.Domain.Locations
 {
-    public class DatabaseAggregateStore :
-        IAggregateMap<LocationAggregate>,
-        IAggregateMap<SpotAggregate>
+    public class LocationToTable
     {
         private readonly IApiDatabaseContext _dbContext;
         private readonly IMapper _mapper;
 
-        public DatabaseAggregateStore(IApiDatabaseContext dbContext, IMapper mapper)
+        public LocationToTable(IApiDatabaseContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
             _mapper = mapper;
@@ -33,23 +32,6 @@ namespace PjoterParker.DatabaseStore
             {
                 location = _mapper.Map<Location>(locationAggregate);
                 _dbContext.Location.Update(location);
-            }
-
-            _dbContext.SaveChanges();
-        }
-
-        public void Save(SpotAggregate spotAggregate)
-        {
-            var spot = _dbContext.Spot.FirstOrDefault(l => l.LocationId == spotAggregate.Id);
-            if (spot.IsNull())
-            {
-                spot = _mapper.Map<Spot>(spotAggregate);
-                _dbContext.Spot.Add(spot);
-            }
-            else
-            {
-                spot = _mapper.Map<Spot>(spotAggregate);
-                _dbContext.Spot.Update(spot);
             }
 
             _dbContext.SaveChanges();

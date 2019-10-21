@@ -68,7 +68,8 @@ namespace PjoterParker.Domain.Locations
         {
             RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
             {
-                var exists = await _database.Location.AnyAsync(location => location.Name == aggregate.Name, token);
+                var exists = await _database.Location
+                .AnyAsync(location => location.Name == aggregate.Name && location.LocationId != aggregate.Id, token);
                 if (exists)
                 {
                     context.AddFailure(nameof(aggregate.Name), "Location with that name already exists");

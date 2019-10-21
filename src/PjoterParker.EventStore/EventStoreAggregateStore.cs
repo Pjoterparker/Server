@@ -80,8 +80,8 @@ namespace PjoterParker.Core.EventStore
 
                 foreach (var evnt in currentSlice.Events)
                 {
-                    var realEvent = DeserializeEvent(evnt.OriginalEvent.Metadata, evnt.OriginalEvent.Data);
-                    aggregate.Apply(realEvent as IEvent);
+                    (aggregate as dynamic).Apply(DeserializeEvent(evnt.OriginalEvent.Metadata, evnt.OriginalEvent.Data));
+                    aggregate.Version++;
                 }
             }
             while (version >= currentSlice.NextEventNumber && !currentSlice.IsEndOfStream);
@@ -108,14 +108,13 @@ namespace PjoterParker.Core.EventStore
             aggregate.Version += aggregate.Events.Count();
             await _cache.StringSetAsync(streamName, JsonConvert.SerializeObject(aggregate), TimeSpan.FromDays(1));
 
-            var dbHandler = _context.Resolve<IAggregateMap<TAggregate>>();
-            dbHandler.Save(aggregate);
+            _context.Resolve<IAggregateMap<TAggregate>>().Save(aggregate);
         }
 
-        private object DeserializeEvent(byte[] metadata, byte[] data)
+        private dynamic DeserializeEvent(byte[] metadata, byte[] data)
         {
             var eventType = JObject.Parse(Encoding.UTF8.GetString(metadata)).Property("EventType").Value;
-            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType((string)eventType));
+            return JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType((string)eventType)) as dynamic;
         }
 
         private EventData ToEventData(EventComposite @event)

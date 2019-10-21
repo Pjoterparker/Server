@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
@@ -30,17 +29,11 @@ namespace PjoterParker.Domain.Locations
                 _aggregateStore = aggregateStore;
             }
 
-            public Task<IEnumerable<EventComposite>> ExecuteAsync(Command command)
+            public async Task<IAggregateRoot> ExecuteAsync(Command command)
             {
-                //var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
-                //location.Update(command);
-                //return location.Events;
-                return null;
-            }
-
-            Task<IAggregateRoot> ICommandHandlerAsync<Command>.ExecuteAsync(Command command)
-            {
-                throw new NotImplementedException();
+                var location = await _aggregateStore.GetByIdAsync<LocationAggregate>(command.LocationId);
+                location.Update(command);
+                return location;
             }
         }
 
