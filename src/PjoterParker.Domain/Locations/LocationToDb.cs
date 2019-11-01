@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using AutoMapper;
 using PjoterParker.Api.Database;
 using PjoterParker.Api.Database.Entities;

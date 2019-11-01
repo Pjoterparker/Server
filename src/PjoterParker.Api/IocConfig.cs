@@ -11,18 +11,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PjoterParker.Api.Credentials;
 using PjoterParker.Api.Database;
-using PjoterParker.Common;
 using PjoterParker.Common.Commands;
 using PjoterParker.Common.Credentials;
 using PjoterParker.Common.Events;
 using PjoterParker.Common.Services;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
-using PjoterParker.Core.Credentials;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
-using PjoterParker.DatabaseStore;
 using PjoterParker.Development;
 using PjoterParker.Domain.Locations;
 using PjoterParker.EventStore;
@@ -79,7 +76,7 @@ namespace PjoterParker.Api
         public static IContainer RegisterDependencies(IServiceCollection services, IHostingEnvironment env, IConfiguration rootConfiguration)
         {
             var domainAssembly = typeof(CreateLocation).GetTypeInfo().Assembly;
-            
+
             var builder = new ContainerBuilder();
             builder.Populate(services);
             RegisterCredentials(builder);
@@ -161,7 +158,7 @@ namespace PjoterParker.Api
             builder.RegisterType<GuidService>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             builder.RegisterType<EventStoreAggregateStore>().AsImplementedInterfaces().InstancePerLifetimeScope();
-            
+
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ISpecificationFor<,>)).InstancePerLifetimeScope();
 
             builder.RegisterAssemblyTypes(domainAssembly)

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using AutoMapper;
 using PjoterParker.Api.Database;
 using PjoterParker.Api.Database.Entities;
 using PjoterParker.Common.Extensions;
 using PjoterParker.Core.Aggregates;
-using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Domain.Spots
 {

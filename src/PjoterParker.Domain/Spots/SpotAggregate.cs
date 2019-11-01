@@ -130,7 +130,7 @@ namespace PjoterParker.Domain.Spots
 
         public void Apply(SpotAccessibleForReservation @event)
         {
-            for(var date = @event.From.Date; date < @event.To.Date; date = date.AddDays(1))
+            for (var date = @event.From.Date; date < @event.To.Date; date = date.AddDays(1))
             {
                 if (!Availability.Contains(date))
                 {

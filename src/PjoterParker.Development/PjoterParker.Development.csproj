@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PjoterParker.Api.Database\PjoterParker.Api.Database.csproj" />
     <ProjectReference Include="..\PjoterParker.Core\PjoterParker.Core.csproj" />
   </ItemGroup>
 

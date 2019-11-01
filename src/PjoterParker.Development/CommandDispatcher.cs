@@ -48,7 +48,7 @@ namespace PjoterParker.Development
             }
 
             var handler = _context.Resolve<ICommandHandlerAsync<TCommand>>();
-            IAggregateRoot aggregateRoot = await handler.ExecuteAsync(command); 
+            IAggregateRoot aggregateRoot = await handler.ExecuteAsync(command);
 
             _eventFactory.Make(commandComposite, aggregateRoot.Events);
             await aggregateRoot.CommitAsync(_aggregateStore);

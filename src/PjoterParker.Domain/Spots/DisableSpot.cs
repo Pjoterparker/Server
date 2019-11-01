@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
-using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Domain.Spots
 {

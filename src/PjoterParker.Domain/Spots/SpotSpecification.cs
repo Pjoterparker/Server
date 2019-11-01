@@ -50,13 +50,13 @@ namespace PjoterParker.Domain.Spots
 
         public void MustNotBeDisabled()
         {
-            RuleFor(x => x).Custom( (aggregate, context) =>
-            {
-                if (aggregate.IsDisabled)
-                {
-                    context.AddFailure(nameof(aggregate.Id), "Spot is disabled");
-                }
-            });
+            RuleFor(x => x).Custom((aggregate, context) =>
+           {
+               if (aggregate.IsDisabled)
+               {
+                   context.AddFailure(nameof(aggregate.Id), "Spot is disabled");
+               }
+           });
         }
 
         public void MustHaveExistingNotDisabledLocationId()

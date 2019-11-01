@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PjoterParker.Core.Commands;
-using PjoterParker.Domain.Locations;
 using PjoterParker.Domain.Spots;
 
 namespace PjoterParker.Api.Controllers
