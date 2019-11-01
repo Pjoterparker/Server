@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PjoterParker.Domain\PjoterParker.Domain.csproj" />
+    <ProjectReference Include="..\PjoterParker.Events\PjoterParker.Events.csproj" />
+  </ItemGroup>
+
+</Project>

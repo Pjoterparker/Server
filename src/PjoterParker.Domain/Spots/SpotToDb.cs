@@ -7,10 +7,11 @@ using PjoterParker.Api.Database;
 using PjoterParker.Api.Database.Entities;
 using PjoterParker.Common.Extensions;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Domain.Locations;
 
-namespace PjoterParker.Domain.Locations
+namespace PjoterParker.Domain.Spots
 {
-    public class LocationToDb : IAggregateMap<LocationAggregate>
+    public class LocationToDb : IAggregateMap<SpotAggregate>
     {
         private readonly IApiDatabaseContext _dbContext;
         private readonly IMapper _mapper;
@@ -21,18 +22,18 @@ namespace PjoterParker.Domain.Locations
             _mapper = mapper;
         }
 
-        public void Save(LocationAggregate locationAggregate)
+        public void Save(SpotAggregate spotAggregate)
         {
-            var location = _dbContext.Location.FirstOrDefault(l => l.LocationId == locationAggregate.Id);
-            if (location.IsNull())
+            var spot = _dbContext.Spot.FirstOrDefault(s => s.SpotId == spotAggregate.Id);
+            if (spot.IsNull())
             {
-                location = _mapper.Map<Location>(locationAggregate);
-                _dbContext.Location.Add(location);
+                spot = _mapper.Map<Spot>(spotAggregate);
+                _dbContext.Spot.Add(spot);
             }
             else
             {
-                location = _mapper.Map<Location>(locationAggregate);
-                _dbContext.Location.Update(location);
+                spot = _mapper.Map<Spot>(spotAggregate);
+                _dbContext.Spot.Update(spot);
             }
 
             _dbContext.SaveChanges();

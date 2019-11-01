@@ -5,9 +5,8 @@ using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
 using PjoterParker.Core.Services;
 using PjoterParker.Core.Validation;
-using PjoterParker.Domain.Locations;
 
-namespace PjoterParker.Api.Controllers.Locations
+namespace PjoterParker.Domain.Spots
 {
     public class CreateSpot
     {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Commands;
 using PjoterParker.Domain.Locations;
 

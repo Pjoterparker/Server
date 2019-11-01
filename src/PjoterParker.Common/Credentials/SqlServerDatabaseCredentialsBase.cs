@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
-using PjoterParker.Core.Extensions;
+using PjoterParker.Common.Extensions;
+using PjoterParker.Core.Credentials;
 
-namespace PjoterParker.Core.Credentials
+namespace PjoterParker.Common.Credentials
 {
     public sealed class SqlServerDatabaseCredentials : IConnectionString
     {

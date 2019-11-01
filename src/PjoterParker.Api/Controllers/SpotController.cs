@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using PjoterParker.Api.Controllers.Locations;
 using PjoterParker.Core.Commands;
 using PjoterParker.Domain.Locations;
 using PjoterParker.Domain.Spots;
@@ -43,6 +42,27 @@ namespace PjoterParker.Api.Controllers
         public async Task Disable(Guid spotId)
         {
             await _commandDispatcher.DispatchAsync(new DisableSpot.Command(spotId));
+        }
+
+        [HttpPost]
+        [Route("{spotId}/Vacate")]
+        public async Task Vacate(VacateSpot.Command value)
+        {
+            await _commandDispatcher.DispatchAsync(value);
+        }
+
+        [HttpPost]
+        [Route("{spotId}/Reserve")]
+        public async Task Reserve(ReserveSpot.Command value)
+        {
+            await _commandDispatcher.DispatchAsync(value);
+        }
+
+        [HttpPost]
+        [Route("{spotId}/Cancel")]
+        public async Task Cancel(CancelReservation.Command value)
+        {
+            await _commandDispatcher.DispatchAsync(value);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
+using PjoterParker.Common.Extensions;
 using PjoterParker.Core.Credentials;
-using PjoterParker.Core.Extensions;
 
 namespace PjoterParker.Common.Credentials
 {

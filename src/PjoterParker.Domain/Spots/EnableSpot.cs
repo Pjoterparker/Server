@@ -27,10 +27,11 @@ namespace PjoterParker.Domain.Spots
                 _aggregateStore = aggregateStore;
             }
 
-            public Task<IAggregateRoot> ExecuteAsync(Command command)
+            public async Task<IAggregateRoot> ExecuteAsync(Command command)
             {
-                var spot = _aggregateStore.GetNew<SpotAggregate>();
-                return Task.FromResult<IAggregateRoot>(spot);
+                var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);
+                spot.Enable();
+                return spot;
             }
         }
     }

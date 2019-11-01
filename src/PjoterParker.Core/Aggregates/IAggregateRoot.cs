@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Events;
 
 namespace PjoterParker.Core.Aggregates
 {

@@ -1,15 +1,16 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using PjoterParker.Api.Database;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
-using PjoterParker.Database;
 using PjoterParker.Events;
 
-namespace PjoterParker.Domain.Locations
+namespace PjoterParker.Domain.Spots
 {
     public class SpotSpecification : AppAbstractValidation<SpotAggregate>,
         ISpecificationFor<SpotAggregate, SpotCreated>,
-        ISpecificationFor<SpotAggregate, SpotUpdated>
+        ISpecificationFor<SpotAggregate, SpotUpdated>,
+        ISpecificationFor<SpotAggregate, SpotAccessibleForReservation>
     {
         private readonly IApiDatabaseContext _database;
 
@@ -21,7 +22,7 @@ namespace PjoterParker.Domain.Locations
         public IValidator<SpotAggregate> Apply(SpotCreated @event)
         {
             MusHaveName();
-            MustHaveExistingLocationId();
+            MustHaveExistingNotDisabledLocationId();
             MustHaveUniqueName();
             return this;
         }
@@ -29,9 +30,16 @@ namespace PjoterParker.Domain.Locations
         public IValidator<SpotAggregate> Apply(SpotUpdated @event)
         {
             MusHaveName();
-            MustHaveExistingId();
-            MustHaveExistingLocationId();
+            MustHaveExistingNotDisabledLocationId();
+            MustNotBeDisabled();
             MustHaveUniqueName();
+            return this;
+        }
+
+        public IValidator<SpotAggregate> Apply(SpotAccessibleForReservation @event)
+        {
+            MustNotBeDisabled();
+            MustHaveExistingNotDisabledLocationId();
             return this;
         }
 
@@ -40,26 +48,27 @@ namespace PjoterParker.Domain.Locations
             RuleFor(x => x.Name).NotEmpty().MaximumLength(255);
         }
 
-        public void MustHaveExistingId()
+        public void MustNotBeDisabled()
         {
-            RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
+            RuleFor(x => x).Custom( (aggregate, context) =>
             {
-                var exists = await _database.Spot.AnyAsync(spot => spot.SpotId == aggregate.Id, token);
-                if (!exists)
+                if (aggregate.IsDisabled)
                 {
-                    context.AddFailure(nameof(aggregate.Id), "Spot with that Id doesn't exists");
+                    context.AddFailure(nameof(aggregate.Id), "Spot is disabled");
                 }
             });
         }
 
-        public void MustHaveExistingLocationId()
+        public void MustHaveExistingNotDisabledLocationId()
         {
             RuleFor(x => x).CustomAsync(async (aggregate, context, token) =>
             {
-                var exists = await _database.Location.AnyAsync(location => location.LocationId == aggregate.LocationId, token);
+                var exists = await _database.Location.AnyAsync(location =>
+                                                               location.LocationId == aggregate.LocationId
+                                                               && !location.IsDisabled, token);
                 if (!exists)
                 {
-                    context.AddFailure(nameof(aggregate.Id), "Location with that Id doesn't exists");
+                    context.AddFailure(nameof(aggregate.Id), "Location with that Id doesn't exists or is disabled");
                 }
             });
         }

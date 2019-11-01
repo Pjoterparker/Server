@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Autofac;
 using PjoterParker.Core.Events;
-using PjoterParker.Database;
 
 namespace PjoterParker.Development
 {

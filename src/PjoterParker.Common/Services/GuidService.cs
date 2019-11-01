@@ -1,7 +1,7 @@
 ﻿using System;
 using PjoterParker.Core.Services;
 
-namespace PjoterParker.Common
+namespace PjoterParker.Common.Services
 {
     public class GuidService : IGuidService
     {

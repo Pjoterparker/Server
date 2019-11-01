@@ -1,4 +1,4 @@
-﻿namespace PjoterParker.Core.Services
+﻿namespace PjoterParker.Core.Database
 {
     public interface IDbContext
     {

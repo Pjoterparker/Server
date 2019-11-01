@@ -7,12 +7,11 @@ using EventStore.ClientAPI;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PjoterParker.Core.Aggregates;
-using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
 using StackExchange.Redis;
 
-namespace PjoterParker.Core.EventStore
+namespace PjoterParker.EventStore
 {
     public class EventStoreAggregateStore : IAggregateStore
     {

@@ -1,6 +1,4 @@
-﻿using PjoterParker.Core.Events;
-
-namespace PjoterParker.Core.Commands
+﻿namespace PjoterParker.Core.Events
 {
     public class EventComposite
     {

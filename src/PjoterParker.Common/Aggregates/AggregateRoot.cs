@@ -6,11 +6,11 @@ using FluentValidation;
 using FluentValidation.Results;
 using Newtonsoft.Json;
 using PjoterParker.Common.Helpers;
-using PjoterParker.Core.Commands;
+using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Specification;
 
-namespace PjoterParker.Core.Aggregates
+namespace PjoterParker.Common.Aggregates
 {
     public abstract class AggregateRoot<TAggregate> : IAggregateRoot
         where TAggregate : AggregateRoot<TAggregate>,

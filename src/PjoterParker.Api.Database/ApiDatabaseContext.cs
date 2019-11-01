@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PjoterParker.Api.Database.Configurations;
 using PjoterParker.Api.Database.Entities;
-using PjoterParker.Database;
 
 namespace PjoterParker.Api.Database
 {
@@ -18,6 +17,8 @@ namespace PjoterParker.Api.Database
         public DbSet<Location> Location { get; set; }
 
         public DbSet<Spot> Spot { get; set; }
+
+        public DbSet<Reservation> Reservation { get; set; }
 
         public void BeginTransaction()
         {

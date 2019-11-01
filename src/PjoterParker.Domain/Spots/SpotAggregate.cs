@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using PjoterParker.Api.Controllers.Locations;
+using PjoterParker.Common.Aggregates;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
-using PjoterParker.Domain.Spots;
 using PjoterParker.Events;
 
-namespace PjoterParker.Domain.Locations
+namespace PjoterParker.Domain.Spots
 {
     public class SpotAggregate : AggregateRoot<SpotAggregate>,
     IApply<SpotCreated>,
     IApply<OwnerAssignedToSpot>,
     IApply<MarkSpotAsUnoccupied>,
+    IApply<SpotEnabled>,
+    IApply<SpotDisabled>,
+    IApply<SpotAccessibleForReservation>,
     IApply<PropertyChanged<SpotAggregate>>
     {
         public SpotAggregate()
         {
-
         }
 
         public Guid LocationId { get; set; }
@@ -24,6 +26,12 @@ namespace PjoterParker.Domain.Locations
         public string Name { get; set; }
 
         public Guid? OwnerId { get; set; }
+
+        public bool IsDisabled { get; set; }
+
+        public List<ReservationEntity> Reservations { get; set; } = new List<ReservationEntity>();
+
+        public List<DateTime> Availability { get; set; } = new List<DateTime>();
 
         public void Apply(MarkSpotAsUnoccupied @event)
         {
@@ -42,6 +50,22 @@ namespace PjoterParker.Domain.Locations
             Name = @event.Name;
         }
 
+        public void Enable()
+        {
+            if (IsDisabled)
+            {
+                AddEvent(new SpotEnabled(Id));
+            }
+        }
+
+        public void Disable()
+        {
+            if (!IsDisabled)
+            {
+                AddEvent(new SpotEnabled(Id));
+            }
+        }
+
         public void Create(Guid spotId, CreateSpot.Command command)
         {
             AddEvent(new SpotCreated(spotId, command.Name, command.LocationId));
@@ -50,6 +74,21 @@ namespace PjoterParker.Domain.Locations
             {
                 AddEvent(new OwnerAssignedToSpot(spotId, command.OwnerId.Value));
             }
+        }
+
+        public void Reserve(ReserveSpot.Command command)
+        {
+            AddEvent(new ReservationMade(command.SpotId, command.From, command.To, command.UserId));
+        }
+
+        public void Cancel(Guid reservationId, CancelReservation.Command command)
+        {
+            AddEvent(new ReservationCanceled(reservationId, command.SpotId));
+        }
+
+        public void Vacate(VacateSpot.Command command)
+        {
+            AddEvent(new SpotAccessibleForReservation(command.SpotId, command.From, command.To));
         }
 
         public void Update(UpdateSpot.Command command)
@@ -76,6 +115,27 @@ namespace PjoterParker.Domain.Locations
             if (Events.Any())
             {
                 AddEvent(new SpotUpdated(command.SpotId));
+            }
+        }
+
+        public void Apply(SpotEnabled @event)
+        {
+            IsDisabled = false;
+        }
+
+        public void Apply(SpotDisabled @event)
+        {
+            IsDisabled = true;
+        }
+
+        public void Apply(SpotAccessibleForReservation @event)
+        {
+            for(var date = @event.From.Date; date < @event.To.Date; date = date.AddDays(1))
+            {
+                if (!Availability.Contains(date))
+                {
+                    Availability.Add(date);
+                }
             }
         }
     }

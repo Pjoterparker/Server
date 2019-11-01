@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using PjoterParker.Api.Database;
 using PjoterParker.Core.Specification;
 using PjoterParker.Core.Validation;
-using PjoterParker.Database;
 using PjoterParker.Events;
 
 namespace PjoterParker.Domain.Locations

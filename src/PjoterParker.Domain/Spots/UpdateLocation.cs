@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
 using PjoterParker.Domain.Locations;
 

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Autofac;
 using FluentValidation;
 using PjoterParker.Core.Aggregates;
+using PjoterParker.Core.Commands;
 using PjoterParker.Core.Events;
 using PjoterParker.Core.Validation;
 
-namespace PjoterParker.Core.Commands
+namespace PjoterParker.Development
 {
     public class CommandDispatcher : ICommandDispatcher
     {

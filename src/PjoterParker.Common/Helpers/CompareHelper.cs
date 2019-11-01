@@ -1,5 +1,5 @@
 ﻿using System;
-using PjoterParker.Core.Extensions;
+using PjoterParker.Common.Extensions;
 
 namespace PjoterParker.Common.Helpers
 {

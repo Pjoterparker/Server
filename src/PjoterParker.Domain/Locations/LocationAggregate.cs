@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using PjoterParker.Api.Controllers.Locations;
+using PjoterParker.Common.Aggregates;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Events;
 using PjoterParker.Events;

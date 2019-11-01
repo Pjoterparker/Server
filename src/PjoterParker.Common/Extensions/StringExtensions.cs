@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace PjoterParker.Core.Extensions
+namespace PjoterParker.Common.Extensions
 {
     public static class StringExtensions
     {

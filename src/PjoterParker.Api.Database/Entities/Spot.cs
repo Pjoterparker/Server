@@ -26,5 +26,6 @@ namespace PjoterParker.Api.Database.Entities
         [Key] public Guid SpotId { get; set; }
 
         public Guid? UserId { get; set; }
+        public bool IsDisabled { get; set; }
     }
 }

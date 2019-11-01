@@ -1,4 +1,4 @@
-﻿namespace PjoterParker.Core.Extensions
+﻿namespace PjoterParker.Common.Extensions
 {
     public static class ObjectExtensions
     {

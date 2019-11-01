@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Threading.Tasks;
+using FluentValidation;
 using PjoterParker.Core.Aggregates;
 using PjoterParker.Core.Commands;
+using PjoterParker.Core.Validation;
 using PjoterParker.Domain.Locations;
 
 namespace PjoterParker.Domain.Spots
 {
-    public class DisableSpot
+    public class VacateSpot
     {
         public class Command : ICommand
         {
-            public Command(Guid spotId)
-            {
-                SpotId = spotId;
-            }
-
             public Guid SpotId { get; set; }
+            public Guid UserId { get; set; }
+            public DateTime From { get; set; }
+            public DateTime To { get; set; }
         }
 
         public class Handler : ICommandHandlerAsync<Command>
@@ -30,8 +30,17 @@ namespace PjoterParker.Domain.Spots
             public async Task<IAggregateRoot> ExecuteAsync(Command command)
             {
                 var spot = await _aggregateStore.GetByIdAsync<SpotAggregate>(command.SpotId);
-                spot.Disable();
+                spot.Vacate(command);
                 return spot;
+            }
+        }
+
+        public class Validator : AppAbstractValidation<Command>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.To.Date).GreaterThan(x => x.From.Date);
+                RuleFor(x => x).Must(x => (x.To.Date - x.From.Date).TotalDays <= 30).WithMessage("Date diffrence must be less than 30 days");
             }
         }
     }

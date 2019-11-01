@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PjoterParker.Core.Commands
+namespace PjoterParker.Core.Events
 {
     public class EventMetadata
     {
