@@ -3,14 +3,14 @@ using PjoterParker.Api.Database.Entities;
 
 namespace PjoterParker.Domain.Spots
 {
-    public class SpotAggrageteToSpot : Profile
+    public class SpotAggregateToSpot : Profile
     {
-        public SpotAggrageteToSpot()
+        public SpotAggregateToSpot()
         {
             CreateMap<SpotAggregate, Spot>()
                .ForMember(dest => dest.LocationId, opts => opts.MapFrom(src => src.Id));
 
-            CreateMap<ReservationEntity, Reservation>();
+            //CreateMap<ReservationEntity, Reservation>();
         }
     }
 }

@@ -10,6 +10,6 @@ namespace PjoterParker.Api.Database
 
         DbSet<Spot> Spot { get; set; }
 
-        DbSet<Reservation> Reservation { get; set; }
+        //DbSet<Reservation> Reservation { get; set; }
     }
 }

@@ -84,8 +84,8 @@ namespace PjoterParker.Api
             });
 
             var applicationContainer = IocConfig.RegisterDependencies(services, _hostingEnvironment, _configuration);
-            var cache = applicationContainer.Resolve<IServer>();
-            cache.FlushDatabase();
+            //var cache = applicationContainer.Resolve<IServer>();
+            //cache.FlushDatabase();
 
             return new AutofacServiceProvider(applicationContainer);
         }

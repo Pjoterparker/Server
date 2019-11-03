@@ -36,7 +36,7 @@ namespace PjoterParker.Api
             builder.Register(b =>
             {
                 var configuration = b.Resolve<IConfiguration>();
-                return new ApiDatabaseCredentials(new LocalDatabaseCredentials(configuration, "Database"));
+                return new ApiDatabaseCredentials(new SqlServerDatabaseCredentials(configuration, "Api"));
             }).SingleInstance();
 
             builder.Register(b =>
@@ -69,7 +69,7 @@ namespace PjoterParker.Api
             builder.Register(b =>
             {
                 var configuration = b.Resolve<IConfiguration>();
-                return new ApiDatabaseCredentials(new SqlServerDatabaseCredentials(configuration, "Database"));
+                return new ApiDatabaseCredentials(new SqlServerDatabaseCredentials(configuration, "Api"));
             }).SingleInstance();
 
             builder.Register(b =>

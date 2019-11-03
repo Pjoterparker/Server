@@ -18,7 +18,7 @@ namespace PjoterParker.Api.Database
 
         public DbSet<Spot> Spot { get; set; }
 
-        public DbSet<Reservation> Reservation { get; set; }
+        //public DbSet<Reservation> Reservation { get; set; }
 
         public void BeginTransaction()
         {

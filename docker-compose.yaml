@@ -6,12 +6,20 @@ services:
     container_name : "pjoterparker-redis"
     ports:
       - "6379:6379"
+    volumes :
+      - pjoterparker-data:/var/lib/redis/data
+    networks :
+      - backend
   eventStore:
     image: eventstore/eventstore:latest
     container_name : "pjoterparker-eventStore"
     ports:
-     - 1113:1113
-     - 2113:2113
+      - 1113:1113
+      - 2113:2113
+    volumes :
+      - pjoterparker-data:/var/lib/eventstore/data
+    networks :
+      - backend
   sql:
     image: mcr.microsoft.com/mssql/server:latest
     container_name : "pjoterparker-sql"
@@ -20,3 +28,13 @@ services:
     environment:
       ACCEPT_EULA : "Y"
       SA_PASSWORD : "KQlqqjercDE7d4YSF3O"
+    volumes :
+     - pjoterparker-data:/var/lib/db/data
+    networks :
+      - backend
+
+volumes:
+  pjoterparker-data:
+
+networks:
+  backend:
