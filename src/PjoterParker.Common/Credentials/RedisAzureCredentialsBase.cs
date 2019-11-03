@@ -4,7 +4,7 @@ using PjoterParker.Core.Credentials;
 
 namespace PjoterParker.Common.Credentials
 {
-    public sealed class RedisCredentialsBase : IConnectionString
+    public sealed class RedisAzureCredentialsBase : IConnectionString
     {
         private readonly bool _allowAdmin;
 
@@ -16,7 +16,7 @@ namespace PjoterParker.Common.Credentials
 
         private readonly int _port;
 
-        public RedisCredentialsBase(IConfiguration configuration)
+        public RedisAzureCredentialsBase(IConfiguration configuration)
         {
             _name = configuration["Redis:Name"];
             _password = configuration["Redis:Password"];

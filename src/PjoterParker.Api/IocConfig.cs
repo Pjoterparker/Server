@@ -50,6 +50,12 @@ namespace PjoterParker.Api
 
                 return settings.Build();
             }).SingleInstance();
+
+            builder.Register(b =>
+            {
+                var configuration = b.Resolve<IConfiguration>();
+                return new RedisCredentials(new RedisLocalCredentialsBase(configuration));
+            }).SingleInstance();
         }
 
         public static void RegisterCredentials(ContainerBuilder builder)
@@ -69,7 +75,7 @@ namespace PjoterParker.Api
             builder.Register(b =>
             {
                 var configuration = b.Resolve<IConfiguration>();
-                return new RedisCredentials(new RedisCredentialsBase(configuration));
+                return new RedisCredentials(new RedisAzureCredentialsBase(configuration));
             }).SingleInstance();
         }
 

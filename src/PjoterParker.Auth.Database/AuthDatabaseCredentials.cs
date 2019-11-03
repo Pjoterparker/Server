@@ -1,16 +1,16 @@
 ﻿using PjoterParker.Common.Credentials;
 using PjoterParker.Core.Credentials;
 
-namespace PjoterParker.Api.Credentials
+namespace PjoterParker.Auth.Database
 {
-    public class RedisCredentials : IConnectionString
+    public class AuthDatabaseCredentials : IConnectionString
     {
-        public RedisCredentials(RedisLocalCredentialsBase credentials)
+        public AuthDatabaseCredentials(LocalDatabaseCredentials credentials)
         {
             ConnectionString = credentials.ConnectionString;
         }
 
-        public RedisCredentials(RedisAzureCredentialsBase credentials)
+        public AuthDatabaseCredentials(SqlServerDatabaseCredentials credentials)
         {
             ConnectionString = credentials.ConnectionString;
         }

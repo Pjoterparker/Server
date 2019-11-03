@@ -25,7 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.EventHandlers"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Tests", "PjoterParker.Tests\PjoterParker.Tests.csproj", "{A041C3D6-16EF-4EBB-B29F-9D2DD7862A1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PjoterParkerker.Services", "PjoterParkerker.Services\PjoterParkerker.Services.csproj", "{DD8E9A55-B910-4C42-8C08-488CC29FF98A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParkerker.Services", "PjoterParkerker.Services\PjoterParkerker.Services.csproj", "{DD8E9A55-B910-4C42-8C08-488CC29FF98A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Auth", "PjoterParker.Auth\PjoterParker.Auth.csproj", "{DC134777-67ED-4867-B67E-D22676461898}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PjoterParker.Auth.Database", "PjoterParker.Auth.Database\PjoterParker.Auth.Database.csproj", "{FA9816BC-9414-40C6-8CFC-B0202DD280A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{C8AFDF26-00AF-4A09-86EB-FF0F5C7DABF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,9 +87,21 @@ Global
 		{DD8E9A55-B910-4C42-8C08-488CC29FF98A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD8E9A55-B910-4C42-8C08-488CC29FF98A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD8E9A55-B910-4C42-8C08-488CC29FF98A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC134777-67ED-4867-B67E-D22676461898}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC134777-67ED-4867-B67E-D22676461898}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC134777-67ED-4867-B67E-D22676461898}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC134777-67ED-4867-B67E-D22676461898}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9816BC-9414-40C6-8CFC-B0202DD280A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9816BC-9414-40C6-8CFC-B0202DD280A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9816BC-9414-40C6-8CFC-B0202DD280A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9816BC-9414-40C6-8CFC-B0202DD280A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9C2D0BF1-BF30-459E-8653-748FADC407E0} = {C8AFDF26-00AF-4A09-86EB-FF0F5C7DABF6}
+		{DC134777-67ED-4867-B67E-D22676461898} = {C8AFDF26-00AF-4A09-86EB-FF0F5C7DABF6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D41BE364-94EF-4729-A06C-BE4FFC13FAEF}
