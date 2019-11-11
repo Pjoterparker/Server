@@ -8,7 +8,7 @@ namespace PjoterParker.Domain.Spots
         public SpotAggregateToSpot()
         {
             CreateMap<SpotAggregate, Spot>()
-               .ForMember(dest => dest.LocationId, opts => opts.MapFrom(src => src.Id));
+               .ForMember(dest => dest.SpotId, opts => opts.MapFrom(src => src.Id));
 
             //CreateMap<ReservationEntity, Reservation>();
         }

@@ -34,7 +34,7 @@ namespace PjoterParker.Development
             _aggregateStore = aggregateStore;
         }
 
-        public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
+        public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : class, ICommand
         {
             CommandComposite commandComposite = _commandFactory.Make(command);
 

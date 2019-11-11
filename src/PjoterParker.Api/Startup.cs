@@ -1,6 +1,7 @@
 ﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -86,6 +87,10 @@ namespace PjoterParker.Api
             var applicationContainer = IocConfig.RegisterDependencies(services, _hostingEnvironment, _configuration);
             //var cache = applicationContainer.Resolve<IServer>();
             //cache.FlushDatabase();
+
+            var busControl = applicationContainer.Resolve<IBusControl>();
+            busControl.Start();
+
 
             return new AutofacServiceProvider(applicationContainer);
         }

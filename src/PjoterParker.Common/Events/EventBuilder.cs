@@ -20,7 +20,7 @@ namespace PjoterParker.Common.Events
             {
                 @event.Metadata.EventId = _guid.New();
                 @event.Metadata.CorrelationId = commandComposite.Metadata.CorrelationId;
-                @event.Metadata.CommandId = commandComposite.Metadata.CommandId;
+                //@event.Metadata.CommandId = commandComposite.Metadata.CommandId;
                 @event.Metadata.EventType = @event.Event.GetType().AssemblyQualifiedName;
             }
 

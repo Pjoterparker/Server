@@ -32,6 +32,43 @@ services:
      - pjoterparker-data:/var/lib/db/data
     networks :
       - backend
+  seq:
+    image: datalust/seq:latest
+    container_name: "pjoterparker-seq"
+    ports:
+      - "5341:80"
+    environment:
+      ACCEPT_EULA : "Y"
+    volumes :
+     - pjoterparker-data:/var/lib/seq/data
+    networks :
+      - backend
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: "pjoterparker-rabbitmq"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    volumes :
+     - pjoterparker-data:/var/lib/rabbitmq/data
+    networks :
+      - backend
+  sonarqube:
+    image: sonarqube:latest
+    container_name: "pjoterparker-sonarqube"
+    ports:
+      - "9000:9000"
+    volumes :
+     - pjoterparker-data:/opt/sonarqube/data
+     - pjoterparker-data:/opt/sonarqube/logs
+     - pjoterparker-data:/opt/sonarqube/extensions
+    networks :
+      - backend
 
 volumes:
   pjoterparker-data:

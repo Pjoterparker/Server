@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Text;
 using FluentValidation;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -46,30 +45,24 @@ namespace PjoterParker.Api.Filters
                 return;
             }
 
-            var exceptionId = _guid.New();
-
             context.HttpContext.Response.StatusCode = 500;
-            var sb = new StringBuilder();
-            sb.AppendLine("ErrorId: " + exceptionId);
-            sb.AppendLine(context.HttpContext.Request.GetDisplayUrl());
 
+            string body = string.Empty;
             if (context.HttpContext.Request.Body.CanSeek)
             {
                 context.HttpContext.Request.Body.Position = 0;
                 using (var reader = new StreamReader(context.HttpContext.Request.Body))
                 {
-                    sb.AppendLine(reader.ReadToEnd());
+                    body = reader.ReadToEnd();
                 }
             }
 
-            sb.AppendLine();
-            sb.Append(context.Exception);
-
-            _logger.Error(sb.ToString());
+            var exceptionId = _guid.New();
+            _logger.Error("ExceptionId: {exceptionId} Url: {url} Body: {body} Exception: {exception}", exceptionId, context.HttpContext.Request.GetDisplayUrl(), body, context.Exception);
 
             if (_hosting.IsDevelopment())
             {
-                context.Result = new ContentResult() { Content = sb.ToString() };
+                context.Result = new ContentResult() { Content = context.Exception.ToString() };
             }
             else
             {

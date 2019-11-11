@@ -40,7 +40,7 @@ namespace PjoterParker.Domain.Spots
             public Validator()
             {
                 RuleFor(x => x.To.Date).GreaterThan(x => x.From.Date);
-                //RuleFor(x => x).Must(x => x.From.Date.AddDays(5) <= )
+                RuleFor(x => x).Must(x => (x.To.Date - x.From.Date).TotalDays <= 5).WithMessage("Cannot make reservation for more than a 5 days");
             }
         }
     }

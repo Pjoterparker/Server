@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using EventStore.ClientAPI;
+using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,6 @@ using PjoterParker.Development;
 using PjoterParker.Domain.Locations;
 using PjoterParker.EventStore;
 using Serilog;
-using Serilog.Events;
 using StackExchange.Redis;
 
 namespace PjoterParker.Api
@@ -95,13 +95,14 @@ namespace PjoterParker.Api
             builder.Register(b => rootConfiguration).SingleInstance();
             builder.Register<Serilog.ILogger>(b =>
             {
-                var format = "{NewLine}{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {NewLine}{Message:lj}{NewLine}{Exception}";
+                var configuration = b.Resolve<IConfiguration>();
+
+                const string format = "{NewLine}{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {NewLine}{Message:lj}{NewLine}{Exception}";
 
                 return new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.Console(outputTemplate: format)
-                    .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Error, outputTemplate: format)
-                    .WriteTo.Logger(cl => cl.Filter.ByIncludingOnly(evt => evt.Level == LogEventLevel.Information).WriteTo.File("Logs/queries.txt", rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Information, outputTemplate: format))
+                    .WriteTo.Seq(configuration["Seq:Url"])
                     .CreateLogger();
             }).SingleInstance();
 
@@ -121,7 +122,7 @@ namespace PjoterParker.Api
             {
                 var configuration = b.Resolve<IConfiguration>();
                 var redis = b.Resolve<ConnectionMultiplexer>();
-                return redis.GetServer(configuration["Redis:Url"]);
+                return redis.GetServer(host: configuration["Redis:Url"], port: 6379);
             }).SingleInstance();
 
             builder.Register(b =>
@@ -137,6 +138,33 @@ namespace PjoterParker.Api
                 return connection;
             }).SingleInstance();
 
+            builder.Register(b =>
+            {
+                var configuration = b.Resolve<IConfiguration>();
+
+                var busControl = Bus.Factory.CreateUsingRabbitMq(cfg =>
+                {
+                    var host = cfg.Host(new Uri(configuration["RabbitMq:Url"]), h =>
+                    {
+                        h.Username(configuration["RabbitMq:Username"]);
+                        h.Password(configuration["RabbitMq:Password"]);
+                    });
+
+                    cfg.UseSerilog();
+
+                    cfg.ReceiveEndpoint(host, "commands", ep =>
+                    {
+                        ep.Handler<CreateLocation>(context =>
+                        {
+                            return Console.Out.WriteLineAsync($"Received: {context.CorrelationId}");
+                        });
+                    });
+                });
+
+                return busControl;
+            })
+            .SingleInstance().As<IBusControl>().As<IBus>();
+
             //builder.Register<IProjectionsManager>(b =>
             //{
             //    var configuration = b.Resolve<IConfiguration>();
@@ -149,7 +177,7 @@ namespace PjoterParker.Api
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IApply<>)).InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(IAggregateMap<>)).InstancePerLifetimeScope();
 
-            builder.RegisterType<CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
+            builder.RegisterType<Rabbitmq.CommandDispatcher>().As<ICommandDispatcher>().InstancePerLifetimeScope();
             builder.RegisterType<CommandFactory>().As<ICommandFactory>().InstancePerLifetimeScope();
             builder.RegisterType<EventFactory>().As<IEventFactory>().InstancePerLifetimeScope();
             builder.RegisterAssemblyTypes(domainAssembly).AsClosedTypesOf(typeof(ICommandHandlerAsync<>)).InstancePerLifetimeScope();

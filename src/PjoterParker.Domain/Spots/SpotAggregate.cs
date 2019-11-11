@@ -31,7 +31,7 @@ namespace PjoterParker.Domain.Spots
 
         public List<ReservationEntity> Reservations { get; set; } = new List<ReservationEntity>();
 
-        public List<DateTime> Availability { get; set; } = new List<DateTime>();
+        public List<DateTime> Availabilities { get; set; } = new List<DateTime>();
 
         public void Apply(MarkSpotAsUnoccupied @event)
         {
@@ -95,17 +95,21 @@ namespace PjoterParker.Domain.Spots
         {
             Compare(nameof(Name), Name, command.Name);
 
+            //when owner changes
             if (OwnerId != command.OwnerId)
             {
+                //if owner exists, unassign old one from the spot
                 if (OwnerId.HasValue)
                 {
                     AddEvent(new OwnerUnassignedFromSpot(Id, OwnerId.Value));
                 }
 
+                //if command has new owner assign they to the spot
                 if (command.OwnerId.HasValue)
                 {
                     AddEvent(new OwnerAssignedToSpot(Id, command.OwnerId.Value));
                 }
+                //else unassign owner from spot
                 else
                 {
                     AddEvent(new MarkSpotAsUnoccupied(Id));
@@ -132,9 +136,9 @@ namespace PjoterParker.Domain.Spots
         {
             for (var date = @event.From.Date; date < @event.To.Date; date = date.AddDays(1))
             {
-                if (!Availability.Contains(date))
+                if (!Availabilities.Contains(date))
                 {
-                    Availability.Add(date);
+                    Availabilities.Add(date);
                 }
             }
         }

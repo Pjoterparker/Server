@@ -15,7 +15,7 @@ namespace PjoterParker.Common.Commands
         public CommandComposite Make(ICommand command)
         {
             var commandComposite = new CommandComposite(command);
-            commandComposite.Metadata.CommandId = _guid.New();
+            //commandComposite.Metadata.CommandId = _guid.New();
             commandComposite.Metadata.CorrelationId = _guid.New();
 
             return commandComposite;
